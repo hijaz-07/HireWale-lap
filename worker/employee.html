@@ -70,6 +70,36 @@
       color: var(--muted);
       font-size: clamp(14px, 2.5vw, 16px);
       font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .login-prompt {
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 15px);
+      margin-top: 8px;
+    }
+
+    .login-link {
+      color: var(--brand-600);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: var(--transition);
+      background: rgba(14, 165, 233, 0.08);
+    }
+
+    .login-link:hover {
+      color: var(--brand-700);
+      background: rgba(14, 165, 233, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .login-link i {
+      font-size: 14px;
     }
 
     .progress-container {
@@ -397,6 +427,10 @@
         width: 100%;
         justify-content: center;
       }
+
+      .login-prompt {
+        margin-top: 12px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -411,6 +445,11 @@
       .checks {
         grid-template-columns: 1fr;
       }
+
+      .login-link {
+        padding: 5px 10px;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -419,6 +458,12 @@
     <header>
       <div class="brand">Hirewale · Worker Registration</div>
       <div class="tag">Step 1 of 8 — Basic Information</div>
+      <div class="login-prompt">
+        Already have an account? 
+        <a href="worker-login.html" class="login-link">
+          <i class="fas fa-sign-in-alt"></i> Back to Login
+        </a>
+      </div>
     </header>
 
     <div class="progress-container">
@@ -530,7 +575,7 @@
         </div>
 
         <div class="actions">
-          <button type="button" class="btn btn-secondary" onclick="window.location.href=`worker-login.html`">
+          <button type="button" class="btn btn-secondary" onclick="window.location.href=`http://127.0.0.1:5500/index.html`">
             <i class="fas fa-arrow-left"></i> Back to Home
           </button>
           <button type="submit" id="nextBtn" class="btn btn-primary" disabled>
@@ -571,6 +616,7 @@
     const chkSym = el('chkSym');
     const matchMsg = el('matchMsg');
     const nextBtn = el('nextBtn');
+    const loginLink = document.querySelector('.login-link');
 
     let generatedOTP = '';
     let otpVerified = false;
@@ -726,6 +772,26 @@
         otpStatus.className = 'status err';
       }
       updateNextState();
+    });
+
+    // Enhanced login link functionality with confirmation
+    loginLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      // Check if form has any entered data
+      const hasData = fullName.value.trim() || 
+                     mobile.value.trim() || 
+                     password.value || 
+                     confirm.value || 
+                     document.getElementById('email').value.trim();
+      
+      if (hasData) {
+        if (confirm('You have unsaved data. Are you sure you want to leave this page and go to login?')) {
+          window.location.href = 'worker-login.html';
+        }
+      } else {
+        window.location.href = 'worker-login.html';
+      }
     });
 
     // Form submission
