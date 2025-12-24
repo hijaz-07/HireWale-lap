@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hirewale — Worker Registration (Step 4)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-600: #0ea5e9;
+      --brand-700: #0284c7;
+      --brand-500: #38bdf8;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --bg: #f8fafc;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% 10%, #e0f2fe 0%, transparent 60%),
+                  radial-gradient(1000px 500px at 90% 20%, #bae6fd 0%, transparent 60%),
+                  linear-gradient(180deg, #f0f9ff 0%, #ffffff 40%, #f8fafc 100%);
+      padding: 20px;
+    }
+
+    .shell {
+      width: min(100%, 880px);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 0.2px;
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 16px);
+      font-weight: 500;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #e2e8f0;
+      border-radius: 10px;
+      margin: 24px 0;
+      overflow: hidden;
+      height: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 50%;
+      background: linear-gradient(90deg, var(--brand-500), var(--brand-700));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: var(--glass-shadow);
+      padding: clamp(20px, 5vw, 40px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(2, 132, 199, 0.15);
+    }
+
+    form {
+      display: grid;
+      gap: 24px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .help {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .upload-container {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 24px;
+      border: 2px dashed var(--border);
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .upload-container:hover {
+      border-color: var(--brand-500);
+      background: rgba(14, 165, 233, 0.05);
+    }
+
+    .upload-container.dragover {
+      border-color: var(--brand-600);
+      background: rgba(14, 165, 233, 0.1);
+      transform: scale(1.02);
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      color: var(--brand-600);
+      margin-bottom: 16px;
+    }
+
+    .upload-text {
+      margin-bottom: 16px;
+    }
+
+    .upload-text h3 {
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .upload-text p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .upload-btn {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .file-input {
+      position: absolute;
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+
+    .preview-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .preview-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .preview-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .preview-image {
+      height: 140px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .preview-details {
+      padding: 12px;
+    }
+
+    .preview-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .preview-size {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .preview-actions {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .preview-btn {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .preview-view {
+      background: #f1f5f9;
+      color: var(--muted);
+      border: none;
+    }
+
+    .preview-view:hover {
+      background: #e2e8f0;
+    }
+
+    .preview-remove {
+      background: #fee2e2;
+      color: var(--danger);
+      border: none;
+    }
+
+    .preview-remove:hover {
+      background: #fecaca;
+    }
+
+    .id-types {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .id-type {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .id-type:hover {
+      border-color: var(--brand-500);
+      transform: translateY(-3px);
+    }
+
+    .id-type.selected {
+      border-color: var(--brand-600);
+      background: rgba(14, 165, 233, 0.1);
+    }
+
+    .id-type i {
+      font-size: 24px;
+      color: var(--brand-600);
+      margin-bottom: 8px;
+    }
+
+    .id-type span {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      border: 0;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--muted);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      color: var(--danger);
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .modal-image {
+      max-width: 100%;
+      max-height: 50vh;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+      .preview-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .id-types {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .actions {
+        flex-direction: column-reverse;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shell {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .id-types {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">Hirewale · Worker Registration</div>
+      <div class="tag">Step 4 of 8 — Identity Verification</div>
+    </header>
+
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+
+    <section class="card">
+      <form id="identityForm">
+        <!-- ID Type Selection -->
+        <div class="form-group">
+          <label>
+            <i class="fas fa-id-card"></i>
+            Select ID Type
+          </label>
+          <div class="id-types">
+            <div class="id-type" data-type="aadhaar">
+              <i class="fas fa-address-card"></i>
+              <span>Aadhaar Card</span>
+            </div>
+            <div class="id-type" data-type="pan">
+              <i class="fas fa-credit-card"></i>
+              <span>PAN Card</span>
+            </div>
+            <div class="id-type" data-type="voter">
+              <i class="fas fa-vote-yea"></i>
+              <span>Voter ID</span>
+            </div>
+            <div class="id-type" data-type="driving">
+              <i class="fas fa-id-card-alt"></i>
+              <span>Driving License</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Government ID Upload -->
+        <div class="form-group">
+          <label>
+            <i class="fas fa-file-contract"></i>
+            Government ID Upload
+            <span class="help">(Max size: 5MB, formats: JPG, PNG, PDF)</span>
+          </label>
+          <div class="upload-container" id="govIdDropzone">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">
+              <h3>Upload Government ID</h3>
+              <p>Drag & drop your file here or click to browse</p>
+            </div>
+            <button type="button" class="upload-btn" id="govIdBtn">
+              <i class="fas fa-upload"></i> Choose File
+            </button>
+            <input type="file" id="govId" class="file-input" accept=".jpg,.jpeg,.png,.pdf" required>
+          </div>
+          <div class="preview-container" id="govIdPreview"></div>
+        </div>
+
+        <!-- Profile Photo Upload -->
+        <div class="form-group">
+          <label>
+            <i class="fas fa-camera"></i>
+            Profile Photo
+            <span class="help">(Max size: 2MB, formats: JPG, PNG)</span>
+          </label>
+          <div class="upload-container" id="profilePicDropzone">
+            <div class="upload-icon">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="upload-text">
+              <h3>Upload Profile Photo</h3>
+              <p>Drag & drop your photo here or click to browse</p>
+            </div>
+            <button type="button" class="upload-btn" id="profilePicBtn">
+              <i class="fas fa-upload"></i> Choose Photo
+            </button>
+            <input type="file" id="profilePic" class="file-input" accept=".jpg,.jpeg,.png" required>
+          </div>
+          <div class="preview-container" id="profilePicPreview"></div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='WRS-3.html'">
+            <i class="fas fa-arrow-left"></i> Previous Step
+          </button>
+          <button type="submit" id="nextBtn" class="btn btn-primary" disabled>
+            Next Step <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- Image Preview Modal -->
+  <div class="modal" id="imageModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Image Preview</h3>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="" alt="Preview" class="modal-image" id="modalImage">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Elements
+      const govIdInput = document.getElementById('govId');
+      const profilePicInput = document.getElementById('profilePic');
+      const govIdBtn = document.getElementById('govIdBtn');
+      const profilePicBtn = document.getElementById('profilePicBtn');
+      const govIdDropzone = document.getElementById('govIdDropzone');
+      const profilePicDropzone = document.getElementById('profilePicDropzone');
+      const govIdPreview = document.getElementById('govIdPreview');
+      const profilePicPreview = document.getElementById('profilePicPreview');
+      const nextBtn = document.getElementById('nextBtn');
+      const identityForm = document.getElementById('identityForm');
+      const idTypes = document.querySelectorAll('.id-type');
+      const imageModal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalClose = document.getElementById('modalClose');
+
+      let selectedIdType = '';
+      let govIdFile = null;
+      let profilePicFile = null;
+
+      // Load previously saved data if any
+      const savedData = JSON.parse(sessionStorage.getItem('hirewale_worker_step4') || '{}');
+      if (savedData.idType) {
+        selectIdType(savedData.idType);
+      }
+
+      // ID Type selection
+      idTypes.forEach(type => {
+        type.addEventListener('click', () => {
+          selectIdType(type.dataset.type);
+        });
+      });
+
+      function selectIdType(type) {
+        selectedIdType = type;
+        idTypes.forEach(t => t.classList.remove('selected'));
+        document.querySelector(`.id-type[data-type="${type}"]`).classList.add('selected');
+        updateNextButtonState();
+      }
+
+      // File input triggers
+      govIdBtn.addEventListener('click', () => govIdInput.click());
+      profilePicBtn.addEventListener('click', () => profilePicInput.click());
+
+      // Setup drag and drop for both dropzones
+      setupDropzone(govIdDropzone, govIdInput, handleGovIdUpload);
+      setupDropzone(profilePicDropzone, profilePicInput, handleProfilePicUpload);
+
+      function setupDropzone(dropzone, input, handler) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          dropzone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dropzone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+          dropzone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+          dropzone.classList.add('dragover');
+        }
+
+        function unhighlight() {
+          dropzone.classList.remove('dragover');
+        }
+
+        dropzone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          if (files.length) {
+            input.files = files;
+            handler(files[0]);
+          }
+        }
+      }
+
+      // Government ID upload handling
+      govIdInput.addEventListener('change', () => {
+        if (govIdInput.files.length) {
+          handleGovIdUpload(govIdInput.files[0]);
+        }
+      });
+
+      function handleGovIdUpload(file) {
+        // Validate file
+        if (!validateFile(file, ['jpg', 'jpeg', 'png', 'pdf'], 5)) {
+          return;
+        }
+
+        govIdFile = file;
+        displayFilePreview(file, govIdPreview, 'govId');
+        updateNextButtonState();
+      }
+
+      // Profile photo upload handling
+      profilePicInput.addEventListener('change', () => {
+        if (profilePicInput.files.length) {
+          handleProfilePicUpload(profilePicInput.files[0]);
+        }
+      });
+
+      function handleProfilePicUpload(file) {
+        // Validate file
+        if (!validateFile(file, ['jpg', 'jpeg', 'png'], 2)) {
+          return;
+        }
+
+        profilePicFile = file;
+        displayFilePreview(file, profilePicPreview, 'profilePic');
+        updateNextButtonState();
+      }
+
+      // File validation
+      function validateFile(file, allowedTypes, maxSizeMB) {
+        const extension = file.name.split('.').pop().toLowerCase();
+        if (!allowedTypes.includes(extension)) {
+          alert(`Invalid file type. Allowed types: ${allowedTypes.join(', ').toUpperCase()}`);
+          return false;
+        }
+
+        if (file.size > maxSizeMB * 1024 * 1024) {
+          alert(`File too large. Maximum size is ${maxSizeMB}MB.`);
+          return false;
+        }
+
+        return true;
+      }
+
+      // Display file preview
+      function displayFilePreview(file, container, type) {
+        container.innerHTML = '';
+
+        const card = document.createElement('div');
+        card.className = 'preview-card';
+
+        const isImage = file.type.includes('image');
+        const isPDF = file.type.includes('pdf');
+        
+        let previewHTML = '';
+        
+        if (isImage) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            previewHTML = `
+              <div class="preview-image" style="background-image: url('${e.target.result}')"></div>
+              <div class="preview-details">
+                <div class="preview-name">${file.name}</div>
+                <div class="preview-size">${formatFileSize(file.size)}</div>
+                <div class="preview-actions">
+                  <button class="preview-btn preview-view" data-type="${type}">
+                    <i class="fas fa-eye"></i> View
+                  </button>
+                  <button class="preview-btn preview-remove" data-type="${type}">
+                    <i class="fas fa-trash"></i> Remove
+                  </button>
+                </div>
+              </div>
+            `;
+            card.innerHTML = previewHTML;
+            container.appendChild(card);
+            
+            // Add event listeners
+            card.querySelector('.preview-view').addEventListener('click', () => {
+              showImagePreview(e.target.result, file.name);
+            });
+            
+            card.querySelector('.preview-remove').addEventListener('click', () => {
+              removeFile(type);
+            });
+          };
+          reader.readAsDataURL(file);
+        } else if (isPDF) {
+          previewHTML = `
+            <div class="preview-image" style="background: #e2e8f0; display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-file-pdf" style="font-size: 48px; color: #dc2626;"></i>
+            </div>
+            <div class="preview-details">
+              <div class="preview-name">${file.name}</div>
+              <div class="preview-size">${formatFileSize(file.size)}</div>
+              <div class="preview-actions">
+                <button class="preview-btn preview-view" data-type="${type}">
+                  <i class="fas fa-eye"></i> View
+                </button>
+                <button class="preview-btn preview-remove" data-type="${type}">
+                  <i class="fas fa-trash"></i> Remove
+                </button>
+              </div>
+            </div>
+          `;
+          card.innerHTML = previewHTML;
+          container.appendChild(card);
+          
+          // Add event listeners
+          card.querySelector('.preview-view').addEventListener('click', () => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              // For PDF we would typically open in a new tab
+              // But for security reasons, we'll just download it
+              const blob = new Blob([file], { type: 'application/pdf' });
+              const url = URL.createObjectURL(blob);
+              window.open(url, '_blank');
+            };
+            reader.readAsArrayBuffer(file);
+          });
+          
+          card.querySelector('.preview-remove').addEventListener('click', () => {
+            removeFile(type);
+          });
+        }
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+
+      function showImagePreview(src, name) {
+        modalImage.src = src;
+        modalTitle.textContent = name;
+        imageModal.style.display = 'flex';
+      }
+
+      modalClose.addEventListener('click', () => {
+        imageModal.style.display = 'none';
+      });
+
+      window.addEventListener('click', (e) => {
+        if (e.target === imageModal) {
+          imageModal.style.display = 'none';
+        }
+      });
+
+      function removeFile(type) {
+        if (type === 'govId') {
+          govIdFile = null;
+          govIdInput.value = '';
+          govIdPreview.innerHTML = '';
+        } else if (type === 'profilePic') {
+          profilePicFile = null;
+          profilePicInput.value = '';
+          profilePicPreview.innerHTML = '';
+        }
+        updateNextButtonState();
+      }
+
+      function updateNextButtonState() {
+        nextBtn.disabled = !(selectedIdType && govIdFile && profilePicFile);
+      }
+
+      // Form submission
+      identityForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        if (!selectedIdType || !govIdFile || !profilePicFile) {
+          alert('Please complete all identity verification steps.');
+          return;
+        }
+
+        // Prepare identity data
+        const identityData = {
+          idType: selectedIdType,
+          govIdFile: {
+            name: govIdFile.name,
+            size: govIdFile.size,
+            type: govIdFile.type
+          },
+          profilePicFile: {
+            name: profilePicFile.name,
+            size: profilePicFile.size,
+            type: profilePicFile.type
+          }
+        };
+
+        // Save to sessionStorage
+        const workerData = JSON.parse(sessionStorage.getItem('hirewale_worker_step3') || '{}');
+        workerData.identity = identityData;
+        sessionStorage.setItem('hirewale_worker_step4', JSON.stringify(workerData));
+
+        // Show loading state
+        nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        nextBtn.disabled = true;
+
+        // Simulate API call delay
+        setTimeout(() => {
+          window.location.href = 'WRS-5.html';
+        }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hirewale — Worker Registration (Step 8)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-600: #0ea5e9;
+      --brand-700: #0284c7;
+      --brand-500: #38bdf8;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --bg: #f8fafc;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% 10%, #e0f2fe 0%, transparent 60%),
+                  radial-gradient(1000px 500px at 90% 20%, #bae6fd 0%, transparent 60%),
+                  linear-gradient(180deg, #f0f9ff 0%, #ffffff 40%, #f8fafc 100%);
+      padding: 20px;
+    }
+
+    .shell {
+      width: min(100%, 880px);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 0.2px;
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 16px);
+      font-weight: 500;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #e2e8f0;
+      border-radius: 10px;
+      margin: 24px 0;
+      overflow: hidden;
+      height: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, var(--brand-500), var(--brand-700));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: var(--glass-shadow);
+      padding: clamp(20px, 5vw, 40px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(2, 132, 199, 0.15);
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .review-icon {
+      width: 60px;
+      height: 60px;
+      background: #f0f9ff;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--brand-600);
+    }
+
+    .review-title {
+      font-weight: 600;
+      font-size: 24px;
+      color: var(--ink);
+    }
+
+    .summary-container {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .summary-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .summary-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+
+    .summary-container::-webkit-scrollbar-thumb {
+      background: var(--brand-500);
+      border-radius: 10px;
+    }
+
+    .summary-section {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .summary-section:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(14, 165, 233, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--brand-600);
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .summary-label {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .summary-value {
+      font-size: 15px;
+      color: var(--ink);
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .file-preview {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .file-icon {
+      width: 36px;
+      height: 36px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+    }
+
+    .file-details {
+      flex: 1;
+    }
+
+    .file-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .file-size {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .empty-value {
+      color: var(--muted-light);
+      font-style: italic;
+    }
+
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      border: 0;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--muted);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .success-message {
+      background: rgba(22, 163, 74, 0.1);
+      border: 1px solid rgba(22, 163, 74, 0.2);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 24px;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .success-icon {
+      font-size: 48px;
+      color: var(--success);
+      margin-bottom: 16px;
+    }
+
+    .success-title {
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--success);
+      margin-bottom: 8px;
+    }
+
+    .success-text {
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .countdown {
+      font-weight: 600;
+      color: var(--brand-700);
+    }
+
+    .security-note {
+      background: #f0f9ff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 24px;
+      border-left: 4px solid var(--brand-500);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .security-note i {
+      font-size: 20px;
+      color: var(--brand-600);
+      margin-top: 2px;
+    }
+
+    .security-content h4 {
+      margin-bottom: 8px;
+      color: var(--brand-700);
+    }
+
+    .security-content p {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .actions {
+        flex-direction: column-reverse;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .review-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shell {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .summary-container {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">Hirewale · Worker Registration</div>
+      <div class="tag">Step 8 of 8 — Review & Submit</div>
+    </header>
+
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+
+    <section class="card">
+      <div class="review-header">
+        <div class="review-icon">
+          <i class="fas fa-clipboard-check"></i>
+        </div>
+        <h2 class="review-title">Review Your Information</h2>
+      </div>
+
+      <div class="summary-container" id="summaryBox">
+        <!-- Summary will be filled by JavaScript -->
+      </div>
+
+      <div class="security-note">
+        <i class="fas fa-shield-alt"></i>
+        <div class="security-content">
+          <h4>Secure Submission</h4>
+          <p>Your information is encrypted and securely stored. All documents will be verified by our team within 24-48 hours.</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='WRS-7.html'">
+          <i class="fas fa-arrow-left"></i> Previous Step
+        </button>
+        <button type="button" id="submitBtn" class="btn btn-primary pulse">
+          <i class="fas fa-paper-plane"></i> Submit Registration
+        </button>
+      </div>
+
+      <div class="success-message" id="successMsg">
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h3 class="success-title">Registration Successful!</h3>
+        <p class="success-text">Your profile is being processed. You will be redirected to your dashboard in <span class="countdown" id="countdown">5</span> seconds.</p>
+        <div class="btn btn-secondary" onclick="window.location.href='W-dashboard.html'">
+          <i class="fas fa-tachometer-alt"></i> Go to Dashboard Now
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const summaryBox = document.getElementById('summaryBox');
+      const submitBtn = document.getElementById('submitBtn');
+      const successMsg = document.getElementById('successMsg');
+      const countdownEl = document.getElementById('countdown');
+
+      // Get all stored worker data
+      const workerData = {};
+      
+      // Retrieve data from all steps
+      for (let i = 1; i <= 7; i++) {
+        const stepData = JSON.parse(sessionStorage.getItem(`hirewale_worker_step${i}`) || '{}');
+        Object.assign(workerData, stepData);
+      }
+
+      // Display enhanced summary
+      summaryBox.innerHTML = `
+        <!-- Personal Information -->
+        <div class="summary-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <h3 class="section-title">Personal Information</h3>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">Full Name</span>
+              <span class="summary-value">${workerData.fullName || '-'}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Mobile Number</span>
+              <span class="summary-value">${workerData.mobile ? `+91 ${workerData.mobile}` : '-'}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Email Address</span>
+              <span class="summary-value">${workerData.email || '<span class="empty-value">Not provided</span>'}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service Details -->
+        <div class="summary-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <h3 class="section-title">Service Details</h3>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">Service Category</span>
+              <span class="summary-value">${workerData.service ? workerData.service.name : '-'}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Service Type</span>
+              <span class="summary-value">${workerData.service ? (workerData.service.type === 'custom' ? 'Custom Service' : 'Standard Service') : '-'}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location Information -->
+        <div class="summary-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <h3 class="section-title">Location Information</h3>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">City</span>
+              <span class="summary-value">${workerData.location ? workerData.location.city : '-'}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Area</span>
+              <span class="summary-value">${workerData.location ? workerData.location.area : '-'}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">State</span>
+              <span class="summary-value">${workerData.location ? workerData.location.state : '-'}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Pincode</span>
+              <span class="summary-value">${workerData.location && workerData.location.pincode ? workerData.location.pincode : '<span class="empty-value">Not provided</span>'}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Identity Verification -->
+        <div class="summary-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-id-card"></i>
+            </div>
+            <h3 class="section-title">Identity Verification</h3>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">ID Type</span>
+              <span class="summary-value">${workerData.identity ? formatIdType(workerData.identity.idType) : '-'}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Government ID</span>
+              <div class="file-preview">
+                <div class="file-icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <div class="file-details">
+                  <div class="file-name">${workerData.identity ? workerData.identity.govIdFile.name : 'No file uploaded'}</div>
+                  <div class="file-size">${workerData.identity ? formatFileSize(workerData.identity.govIdFile.size) : ''}</div>
+                </div>
+              </div>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Profile Photo</span>
+              <div class="file-preview">
+                <div class="file-icon">
+                  <i class="fas fa-image"></i>
+                </div>
+                <div class="file-details">
+                  <div class="file-name">${workerData.identity ? workerData.identity.profilePicFile.name : 'No file uploaded'}</div>
+                  <div class="file-size">${workerData.identity ? formatFileSize(workerData.identity.profilePicFile.size) : ''}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill Proof -->
+        <div class="summary-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-certificate"></i>
+            </div>
+            <h3 class="section-title">Skill Proof</h3>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">Certificate</span>
+              <div class="file-preview">
+                <div class="file-icon">
+                  <i class="fas ${workerData.skillProof && workerData.skillProof.certificate ? 'fa-file-certificate' : 'fa-times'}"></i>
+                </div>
+                <div class="file-details">
+                  <div class="file-name">${workerData.skillProof && workerData.skillProof.certificate ? workerData.skillProof.certificate.name : 'No certificate uploaded'}</div>
+                  <div class="file-size">${workerData.skillProof && workerData.skillProof.certificate ? formatFileSize(workerData.skillProof.certificate.size) : ''}</div>
+                </div>
+              </div>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Introduction Video</span>
+              <div class="file-preview">
+                <div class="file-icon">
+                  <i class="fas ${workerData.skillProof && workerData.skillProof.video ? 'fa-video' : 'fa-times'}"></i>
+                </div>
+                <div class="file-details">
+                  <div class="file-name">${workerData.skillProof && workerData.skillProof.video ? workerData.skillProof.video.name : 'No video uploaded'}</div>
+                  <div class="file-size">${workerData.skillProof && workerData.skillProof.video ? formatFileSize(workerData.skillProof.video.size) : ''}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="summary-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-credit-card"></i>
+            </div>
+            <h3 class="section-title">Payment Details</h3>
+          </div>
+          <div class="summary-grid">
+            ${workerData.payment ? `
+              ${workerData.payment.method === 'bank' ? `
+                <div class="summary-item">
+                  <span class="summary-label">Payment Method</span>
+                  <span class="summary-value">Bank Account</span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">Account Holder</span>
+                  <span class="summary-value">${workerData.payment.bankDetails.holderName}</span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">Account Number</span>
+                  <span class="summary-value">•••• •••• •••• ${workerData.payment.bankDetails.accountNumber.slice(-4)}</span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">Bank Name</span>
+                  <span class="summary-value">${workerData.payment.bankDetails.bankInfo.name}</span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">IFSC Code</span>
+                  <span class="summary-value">${workerData.payment.bankDetails.ifsc}</span>
+                </div>
+              ` : `
+                <div class="summary-item">
+                  <span class="summary-label">Payment Method</span>
+                  <span class="summary-value">UPI</span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">UPI ID</span>
+                  <span class="summary-value">${workerData.payment.upiDetails.upiId}</span>
+                </div>
+              `}
+            ` : '<div class="summary-item"><span class="summary-value">No payment details provided</span></div>'}
+          </div>
+        </div>
+
+        <!-- Terms Agreement -->
+        <div class="summary-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-file-contract"></i>
+            </div>
+            <h3 class="section-title">Terms & Conditions</h3>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">Agreed to Terms</span>
+              <span class="summary-value">${workerData.agreedTerms ? 'Yes' : 'No'}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Agreement Date</span>
+              <span class="summary-value">${workerData.agreedTimestamp ? new Date(workerData.agreedTimestamp).toLocaleDateString() : '-'}</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Helper functions
+      function formatIdType(type) {
+        const types = {
+          'aadhaar': 'Aadhaar Card',
+          'pan': 'PAN Card',
+          'voter': 'Voter ID',
+          'driving': 'Driving License'
+        };
+        return types[type] || type;
+      }
+
+      function formatFileSize(bytes) {
+        if (!bytes) return '';
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+
+      // Form submission
+      submitBtn.addEventListener('click', () => {
+        // Show loading state
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        submitBtn.disabled = true;
+        
+        // In real app, send data to backend API here
+        // Simulate API call with delay
+        setTimeout(() => {
+          successMsg.classList.add('show');
+          
+          // Start countdown for redirect
+          let countdown = 5;
+          const countdownInterval = setInterval(() => {
+            countdown--;
+            countdownEl.textContent = countdown;
+            
+            if (countdown <= 0) {
+              clearInterval(countdownInterval);
+              // Redirect to dashboard
+              window.location.href = 'W-dashboard.html';
+            }
+          }, 1000);
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>

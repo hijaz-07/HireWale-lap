@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Construction Services · Hirewale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-600: #0ea5e9;
+      --brand-700: #0284c7;
+      --brand-500: #38bdf8;
+      --brand-400: #7dd3fc;
+      --brand-300: #bae6fd;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --bg: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --glass-bg: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+      --transition: all 0.3s ease;
+      --transition-slow: all 0.5s ease;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --header-height: 80px;
+      --construction-primary: #f97316;
+      --construction-secondary: #fb923c;
+      --construction-light: #fed7aa;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #f8fafc;
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Skip to content for accessibility */
+    .skip-to-content {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--construction-primary);
+      color: white;
+      padding: 8px;
+      z-index: 1000;
+      transition: top 0.3s;
+    }
+
+    .skip-to-content:focus {
+      top: 0;
+    }
+
+    /* Header Styles */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.1);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: var(--transition);
+      height: var(--header-height);
+    }
+
+    header.scrolled {
+      padding: 12px 32px;
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.15);
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--construction-primary), var(--construction-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand i {
+      font-size: 28px;
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+      padding: 6px 0;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(135deg, var(--construction-primary), var(--construction-secondary));
+      transition: var(--transition);
+    }
+
+    nav a:hover {
+      color: var(--construction-primary);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--construction-primary), var(--construction-secondary));
+      color: white;
+      padding: 8px 20px;
+      border-radius: 50px;
+      transition: var(--transition);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(249, 115, 22, 0.25);
+    }
+
+    .nav-cta::after {
+      display: none;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--ink);
+      z-index: 1001;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      justify-content: center;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .mobile-menu-btn:hover {
+      background: var(--construction-light);
+    }
+
+    /* Construction Hero */
+    .construction-hero {
+      text-align: center;
+      padding: 120px 20px 100px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1e293b, #334155);
+    }
+
+    .construction-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(249, 115, 22, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23f97316' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .construction-hero h1 {
+      font-size: clamp(36px, 6vw, 60px);
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards 0.2s;
+      line-height: 1.2;
+    }
+
+    .construction-hero h1 span {
+      background: linear-gradient(135deg, var(--construction-primary), var(--construction-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .construction-hero p {
+      font-size: 20px;
+      margin-bottom: 40px;
+      opacity: 0.9;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards 0.4s;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 50px;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards 0.6s;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--construction-primary);
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    /* Construction Services Grid */
+    .construction-services {
+      padding: 100px 20px;
+      background: #f8fafc;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 36px;
+      margin-bottom: 16px;
+      color: var(--ink);
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      width: 40%;
+      height: 3px;
+      background: linear-gradient(135deg, var(--construction-primary), var(--construction-secondary));
+      bottom: -8px;
+      left: 30%;
+      border-radius: 3px;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      margin-bottom: 60px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 18px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .service-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 40px 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--construction-primary), var(--construction-secondary));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(249, 115, 22, 0.1);
+    }
+
+    .service-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .service-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      background: linear-gradient(135deg, var(--construction-light), #fed7aa);
+      color: var(--construction-primary);
+      font-size: 32px;
+      transition: all 0.4s ease;
+    }
+
+    .service-card:hover .service-icon {
+      background: linear-gradient(135deg, var(--construction-primary), var(--construction-secondary));
+      color: white;
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .service-card h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      color: var(--ink);
+    }
+
+    .service-card p {
+      color: var(--muted);
+      margin-bottom: 25px;
+      font-size: 15px;
+    }
+
+    .service-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--construction-primary);
+      margin-bottom: 20px;
+    }
+
+    .service-price span {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .service-btn {
+      background: transparent;
+      border: 2px solid var(--construction-primary);
+      color: var(--construction-primary);
+      padding: 10px 25px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .service-btn:hover {
+      background: var(--construction-primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(249, 115, 22, 0.2);
+    }
+
+    /* Construction Process */
+    .construction-process {
+      padding: 100px 20px;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      color: white;
+      text-align: center;
+    }
+
+    .process-steps {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 60px auto 0;
+    }
+
+    .process-step {
+      flex: 1;
+      min-width: 250px;
+      max-width: 300px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      padding: 40px 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+    }
+
+    .process-step:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(249, 115, 22, 0.3);
+    }
+
+    .step-number {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--construction-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 24px;
+      margin: 0 auto 25px;
+    }
+
+    .process-step h3 {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    /* Featured Workers */
+    .featured-workers {
+      padding: 100px 20px;
+      background: #f8fafc;
+    }
+
+    .workers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 60px auto 0;
+    }
+
+    .worker-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .worker-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(249, 115, 22, 0.1);
+    }
+
+    .worker-header {
+      background: linear-gradient(135deg, var(--construction-primary), var(--construction-secondary));
+      padding: 30px;
+      color: white;
+      text-align: center;
+    }
+
+    .worker-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px solid white;
+      margin: 0 auto 20px;
+      overflow: hidden;
+      background: var(--construction-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: var(--construction-primary);
+    }
+
+    .worker-header h3 {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .worker-header p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .worker-rating {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 10px;
+    }
+
+    .worker-rating i {
+      color: #ffd700;
+    }
+
+    .worker-body {
+      padding: 30px;
+    }
+
+    .worker-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .skill-tag {
+      background: var(--construction-light);
+      color: var(--construction-primary);
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .worker-footer {
+      padding: 20px 30px;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .worker-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--construction-primary);
+    }
+
+    .worker-price span {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    /* CTA Section */
+    .construction-cta {
+      padding: 100px 20px;
+      background: linear-gradient(135deg, var(--construction-primary), var(--construction-secondary));
+      color: white;
+      text-align: center;
+    }
+
+    .cta-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .construction-cta h2 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+
+    .construction-cta p {
+      font-size: 18px;
+      margin-bottom: 40px;
+      opacity: 0.9;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: white;
+      color: var(--construction-primary);
+      border: none;
+      padding: 15px 35px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      padding: 15px 35px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      color: var(--construction-primary);
+      transform: translateY(-3px);
+    }
+
+    /* Footer */
+    footer {
+      background: #0f172a;
+      color: #fff;
+      padding: 60px 20px 30px;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    .footer-column h3 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-column h3::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      background: var(--construction-primary);
+      bottom: -8px;
+      left: 0;
+    }
+
+    .footer-column ul {
+      list-style: none;
+    }
+
+    .footer-column ul li {
+      margin-bottom: 12px;
+    }
+
+    .footer-column a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-block;
+    }
+
+    .footer-column a:hover {
+      color: var(--construction-primary);
+      transform: translateX(5px);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--construction-primary);
+      transform: translateY(-3px);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      :root {
+        --header-height: 70px;
+      }
+      
+      header {
+        padding: 12px 20px;
+      }
+      
+      nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: white;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        transition: var(--transition);
+        z-index: 999;
+        gap: 30px;
+      }
+      
+      nav.active {
+        right: 0;
+      }
+      
+      .mobile-menu-btn {
+        display: flex;
+      }
+      
+      .construction-hero {
+        padding: 100px 20px 80px;
+      }
+      
+      .construction-hero h1 {
+        font-size: 32px;
+      }
+      
+      .hero-stats {
+        gap: 30px;
+      }
+      
+      .stat-number {
+        font-size: 32px;
+      }
+      
+      .section-title {
+        font-size: 28px;
+      }
+      
+      .process-steps {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+      }
+      
+      .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      
+      .footer-column h3::after {
+        left: 50%;
+        transform: translateX(-50%); 
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand {
+        font-size: 20px;
+      }
+      
+      .construction-hero h1 {
+        font-size: 28px;
+      }
+      
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .workers-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .hero-stats {
+        gap: 20px;
+      }
+      
+      .stat-number {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <header>
+    <div class="brand">
+      <i class="fas fa-hands-helping"></i>
+      Hirewale
+    </div>
+    <nav id="nav">
+      <a href="index.html">Home</a>
+      <a href="#">How It Works</a>
+      <a href="construction.html" class="active">Construction</a>
+      <a href="#">About Us</a>
+      <a href="#" class="nav-cta">Book Now</a>
+    </nav>
+    <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <main id="main-content">
+    <section class="construction-hero">
+      <div class="hero-content">
+        <h1>Professional <span>Construction Services</span></h1>
+        <p>Connect with certified construction professionals, contractors, and skilled laborers for all your building and renovation needs.</p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Certified Workers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">2,000+</div>
+            <div class="stat-label">Projects Completed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">4.8★</div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Emergency Service</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="construction-services">
+      <h2 class="section-title">Our Construction Services</h2>
+      <p class="section-subtitle">From small repairs to large-scale construction projects, we have the right professionals for every job.</p>
+      
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-home"></i>
+          </div>
+          <h3>New Construction</h3>
+          <p>Complete house and building construction from foundation to finishing</p>
+          <div class="service-price">₹1500/sq ft<span> onwards</span></div>
+          <button class="service-btn">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-hammer"></i>
+          </div>
+          <h3>Renovation</h3>
+          <p>Complete home renovation and remodeling services with modern designs</p>
+          <div class="service-price">₹1200/sq ft<span> onwards</span></div>
+          <button class="service-btn">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3>Electrical Work</h3>
+          <p>Complete electrical wiring, fixtures, and smart home installation</p>
+          <div class="service-price">₹800/day<span> per electrician</span></div>
+          <button class="service-btn">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-faucet"></i>
+          </div>
+          <h3>Plumbing</h3>
+          <p>Water supply, drainage, pipe fitting, and bathroom plumbing solutions</p>
+          <div class="service-price">₹700/day<span> per plumber</span></div>
+          <button class="service-btn">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-paint-roller"></i>
+          </div>
+          <h3>Painting</h3>
+          <p>Interior and exterior painting with premium quality paints and finishes</p>
+          <div class="service-price">₹12/sq ft<span> for walls</span></div>
+          <button class="service-btn">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-tools"></i>
+          </div>
+          <h3>Carpentry</h3>
+          <p>Custom furniture, kitchen cabinets, doors, and wooden work</p>
+          <div class="service-price">₹900/day<span> per carpenter</span></div>
+          <button class="service-btn">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-snowflake"></i>
+          </div>
+          <h3>HVAC Installation</h3>
+          <p>Air conditioning, ventilation, and heating system installation</p>
+          <div class="service-price">₹1500/day<span> per technician</span></div>
+          <button class="service-btn">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-hard-hat"></i>
+          </div>
+          <h3>Labor Supply</h3>
+          <p>Skilled and unskilled labor for construction sites and projects</p>
+          <div class="service-price">₹500/day<span> per labor</span></div>
+          <button class="service-btn">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="construction-process">
+      <h2 class="section-title">Our Construction Process</h2>
+      <p class="section-subtitle">A systematic approach to ensure quality and timely completion of your projects</p>
+      
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-number">1</div>
+          <h3>Consultation & Planning</h3>
+          <p>Detailed site assessment and project planning with our experts</p>
+        </div>
+        
+        <div class="process-step">
+          <div class="step-number">2</div>
+          <h3>Design & Estimation</h3>
+          <p>Architectural design and transparent cost estimation</p>
+        </div>
+        
+        <div class="process-step">
+          <div class="step-number">3</div>
+          <h3>Material Procurement</h3>
+          <p>Quality material sourcing with proper certification</p>
+        </div>
+        
+        <div class="process-step">
+          <div class="step-number">4</div>
+          <h3>Construction & Supervision</h3>
+          <p>Timely execution with regular quality checks</p>
+        </div>
+        
+        <div class="process-step">
+          <div class="step-number">5</div>
+          <h3>Final Inspection</h3>
+          <p>Comprehensive quality check and handover</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="featured-workers">
+      <h2 class="section-title">Featured Construction Workers</h2>
+      <p class="section-subtitle">Our top-rated construction professionals with verified credentials and experience</p>
+      
+      <div class="workers-grid">
+        <div class="worker-card">
+          <div class="worker-header">
+            <div class="worker-avatar">
+              <i class="fas fa-user-hard-hat"></i>
+            </div>
+            <h3>Rajesh Kumar</h3>
+            <p>Civil Engineer & Contractor</p>
+            <div class="worker-rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+              <span>4.8 (124 reviews)</span>
+            </div>
+          </div>
+          <div class="worker-body">
+            <p>15+ years experience in residential and commercial construction. Specialized in earthquake-resistant structures.</p>
+            <div class="worker-skills">
+              <span class="skill-tag">Structural Design</span>
+              <span class="skill-tag">Project Management</span>
+              <span class="skill-tag">Quality Control</span>
+            </div>
+          </div>
+          <div class="worker-footer">
+            <div class="worker-price">₹2000<span>/day</span></div>
+            <button class="service-btn">Hire Now</button>
+          </div>
+        </div>
+        
+        <div class="worker-card">
+          <div class="worker-header">
+            <div class="worker-avatar">
+              <i class="fas fa-user-hard-hat"></i>
+            </div>
+            <h3>Vikram Singh</h3>
+            <p>Master Electrician</p>
+            <div class="worker-rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <span>5.0 (89 reviews)</span>
+            </div>
+          </div>
+          <div class="worker-body">
+            <p>Expert in industrial and residential electrical systems. Certified for smart home automation and solar installations.</p>
+            <div class="worker-skills">
+              <span class="skill-tag">Industrial Wiring</span>
+              <span class="skill-tag">Solar Systems</span>
+              <span class="skill-tag">Smart Homes</span>
+            </div>
+          </div>
+          <div class="worker-footer">
+            <div class="worker-price">₹1500<span>/day</span></div>
+            <button class="service-btn">Hire Now</button>
+          </div>
+        </div>
+        
+        <div class="worker-card">
+          <div class="worker-header">
+            <div class="worker-avatar">
+              <i class="fas fa-user-hard-hat"></i>
+            </div>
+            <h3>Anil Sharma</h3>
+            <p>Plumbing Specialist</p>
+            <div class="worker-rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <span>5.0 (76 reviews)</span>
+            </div>
+          </div>
+          <div class="worker-body">
+            <p>Specialized in modern plumbing systems, water conservation solutions, and industrial plumbing installations.</p>
+            <div class="worker-skills">
+              <span class="skill-tag">Water Systems</span>
+              <span class="skill-tag">Drainage</span>
+              <span class="skill-tag">Conservation</span>
+            </div>
+          </div>
+          <div class="worker-footer">
+            <div class="worker-price">₹1200<span>/day</span></div>
+            <button class="service-btn">Hire Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="construction-cta">
+      <div class="cta-content">
+        <h2>Ready to Start Your Construction Project?</h2>
+        <p>Get free consultation and quotation from our certified construction experts. 100% satisfaction guaranteed.</p>
+        <div class="cta-buttons">
+          <button class="btn-primary">
+            <i class="fas fa-phone-alt"></i> Get Free Consultation
+          </button>
+          <button class="btn-secondary">
+            <i class="fas fa-calendar-alt"></i> Schedule Site Visit
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-column">
+        <h3>Hirewale Construction</h3>
+        <ul>
+          <li><a href="#">About Construction Services</a></li>
+          <li><a href="#">Our Construction Experts</a></li>
+          <li><a href="#">Quality Standards</a></li>
+          <li><a href="#">Safety Protocols</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Construction Services</h3>
+        <ul>
+          <li><a href="#">New Construction</a></li>
+          <li><a href="#">Renovation</a></li>
+          <li><a href="#">Electrical Work</a></li>
+          <li><a href="#">Plumbing</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Support</h3>
+        <ul>
+          <li><a href="#">Project Consultation</a></li>
+          <li><a href="#">Material Guidance</a></li>
+          <li><a href="#">Site Supervision</a></li>
+          <li><a href="#">Emergency Services</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Contact</h3>
+        <ul>
+          <li><a href="#"><i class="fas fa-phone"></i> +91 98765 43210</a></li>
+          <li><a href="#"><i class="fas fa-envelope"></i> construction@hirewale.com</a></li>
+          <li><a href="#"><i class="fas fa-map-marker-alt"></i> Office: Delhi, Mumbai, Bangalore</a></li>
+          <li><a href="#"><i class="fas fa-clock"></i> 24/7 Emergency Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Hirewale Construction Services. All rights reserved.</p>
+      <div class="social-links">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const nav = document.getElementById('nav');
+    
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isExpanded = nav.classList.toggle('active');
+      menuBtn.setAttribute('aria-expanded', isExpanded);
+      menuBtn.innerHTML = isExpanded 
+        ? '<i class="fas fa-times"></i>' 
+        : '<i class="fas fa-bars"></i>';
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (nav.classList.contains('active') && 
+          !nav.contains(e.target) && 
+          e.target !== menuBtn) {
+        nav.classList.remove('active');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+      }
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Service card interactions
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.classList.contains('service-btn')) return;
+        const serviceName = card.querySelector('h3').textContent;
+        alert(`Booking consultation for ${serviceName}`);
+      });
+    });
+
+    // Worker card buttons
+    const hireButtons = document.querySelectorAll('.service-btn');
+    hireButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const workerName = this.closest('.worker-card').querySelector('h3').textContent;
+        alert(`Initiating booking process for ${workerName}`);
+      });
+    });
+
+    // CTA buttons
+    const ctaButtons = document.querySelectorAll('.btn-primary, .btn-secondary');
+    ctaButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const action = this.textContent.trim();
+        alert(`Thank you! Our construction expert will contact you shortly for ${action}`);
+      });
+    });
+
+    // Initialize animations
+    document.addEventListener('DOMContentLoaded', () => {
+      // Animate service cards on scroll
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      // Observe service cards and worker cards
+      document.querySelectorAll('.service-card, .worker-card, .process-step').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(card);
+      });
+    });
+  </script>
+</body>
+</html>

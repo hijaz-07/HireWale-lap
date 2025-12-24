@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hirewale · Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-600: #0ea5e9;
+      --brand-700: #0284c7;
+      --brand-500: #38bdf8;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --bg: #f8fafc;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% 10%, #e0f2fe 0%, transparent 60%),
+                  radial-gradient(1000px 500px at 90% 20%, #bae6fd 0%, transparent 60%),
+                  linear-gradient(180deg, #f0f9ff 0%, #ffffff 40%, #f8fafc 100%);
+      padding: 20px;
+    }
+
+    .shell {
+      width: min(100%, 520px);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 0.2px;
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 16px);
+      font-weight: 500;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: var(--glass-shadow);
+      padding: clamp(24px, 5vw, 36px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(2, 132, 199, 0.15);
+    }
+
+    form {
+      display: grid;
+      gap: 24px;
+    }
+
+    .row {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .help {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      transition: var(--transition);
+    }
+
+    .field:focus-within {
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .field i {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .field input {
+      flex: 1;
+      font: inherit;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .field input::placeholder {
+      color: var(--muted-light);
+    }
+
+    .btn {
+      border: 0;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: #fff;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .password-toggle {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      transition: var(--transition);
+    }
+
+    .password-toggle:hover {
+      color: var(--brand-600);
+    }
+
+    .extra-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 14px;
+      gap: 8px;
+    }
+
+    .extra-links a {
+      color: var(--brand-600);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .extra-links a:hover {
+      color: var(--brand-700);
+      text-decoration: underline;
+    }
+
+    .status {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .status.ok {
+      color: var(--success);
+    }
+
+    .status.err {
+      color: var(--danger);
+    }
+
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .terms input {
+      margin-top: 4px;
+    }
+
+    .terms label {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .terms a {
+      color: var(--brand-600);
+      text-decoration: none;
+    }
+
+    .terms a:hover {
+      text-decoration: underline;
+    }
+
+    .strength {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: 99px;
+      transition: width 0.5s ease, background 0.5s ease;
+    }
+
+    .checks {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .checks div {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .checks .ok {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .checks i {
+      font-size: 14px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .shell {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .checks {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <i style="font-size: 25px;" class="fas fa-hands-helping"></i>
+        Hirewale
+      </div>
+      <div class="tag">Create Your Account</div>
+    </header>
+
+    <section class="card">
+      <form id="signupForm" autocomplete="off">
+        <!-- Full Name -->
+        <div class="row">
+          <label for="fullName">
+            <i class="fas fa-user"></i>
+            Full Name
+          </label>
+          <div class="field">
+            <i class="fas fa-user-circle"></i>
+            <input id="fullName" name="fullName" type="text" placeholder="e.g., John Smith" required />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="row">
+          <label for="email">
+            <i class="fas fa-envelope"></i>
+            Email Address
+          </label>
+          <div class="field">
+            <i class="fas fa-at"></i>
+            <input id="email" name="email" type="email" inputmode="email" placeholder="you@example.com" required />
+          </div>
+          <div class="status" id="emailStatus" aria-live="polite"></div>
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="row">
+          <label for="mobile">
+            <i class="fas fa-mobile-alt"></i>
+            Mobile Number
+          </label>
+          <div class="field">
+            <i class="fas fa-flag"></i>
+            <span>+91</span>
+            <input id="mobile" name="mobile" type="tel" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" placeholder="9876543210" required />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="row">
+          <label for="password">
+            <i class="fas fa-lock"></i>
+            Create Password
+          </label>
+          <div class="field">
+            <i class="fas fa-lock"></i>
+            <input id="password" name="password" type="password" placeholder="At least 8 characters" required />
+            <button type="button" class="password-toggle" id="passwordToggle">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="strength">
+            <div class="bar" aria-hidden="true">
+              <span id="pwBar"></span>
+            </div>
+            <div class="checks">
+              <div id="chkLen"><i class="fas fa-check-circle"></i> 8+ characters</div>
+              <div id="chkUp"><i class="fas fa-check-circle"></i> Uppercase letter</div>
+              <div id="chkNum"><i class="fas fa-check-circle"></i> Number</div>
+              <div id="chkSym"><i class="fas fa-check-circle"></i> Special character</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="row">
+          <label for="confirmPassword">
+            <i class="fas fa-lock"></i>
+            Confirm Password
+          </label>
+          <div class="field">
+            <i class="fas fa-lock"></i>
+            <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Re-type password" required />
+            <button type="button" class="password-toggle" id="confirmToggle">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div id="matchMsg" class="status" aria-live="polite"></div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="row">
+          <div class="terms">
+            <input type="checkbox" id="terms" name="terms" required />
+            <label for="terms">
+              I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. 
+              I confirm that I am at least 18 years old.
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" id="signupBtn" class="btn btn-primary">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+        
+        <div class="extra-links">
+          Already have an account? <a href="URS-1.html"><i class="fas fa-sign-in-alt"></i> Log In</a>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    // Elements
+    const fullName = document.getElementById('fullName');
+    const email = document.getElementById('email');
+    const mobile = document.getElementById('mobile');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const passwordToggle = document.getElementById('passwordToggle');
+    const confirmToggle = document.getElementById('confirmToggle');
+    const signupBtn = document.getElementById('signupBtn');
+    const emailStatus = document.getElementById('emailStatus');
+    const matchMsg = document.getElementById('matchMsg');
+    const signupForm = document.getElementById('signupForm');
+    const pwBar = document.getElementById('pwBar');
+    const chkLen = document.getElementById('chkLen');
+    const chkUp = document.getElementById('chkUp');
+    const chkNum = document.getElementById('chkNum');
+    const chkSym = document.getElementById('chkSym');
+
+    // Password visibility toggles
+    passwordToggle.addEventListener('click', () => {
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    confirmToggle.addEventListener('click', () => {
+      const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+      confirmPassword.setAttribute('type', type);
+      confirmToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    // Update checklist with better visual feedback
+    function updateChecklist(ok, el) {
+      if (ok) {
+        el.classList.add('ok');
+        el.innerHTML = el.innerHTML.replace('fa-check-circle', 'fa-check-circle').replace('fa-times-circle', 'fa-check-circle');
+      } else {
+        el.classList.remove('ok');
+        el.innerHTML = el.innerHTML.replace('fa-check-circle', 'fa-times-circle').replace('fa-times-circle', 'fa-times-circle');
+      }
+    }
+
+    // Enhanced password strength evaluation
+    function evaluatePassword(p) {
+      const hasLen = p.length >= 8;
+      const hasUp = /[A-Z]/.test(p);
+      const hasNum = /[0-9]/.test(p);
+      const hasSym = /[^A-Za-z0-9]/.test(p);
+      
+      // Calculate a more granular score (0-100)
+      let score = 0;
+      if (hasLen) score += 25;
+      if (hasUp) score += 25;
+      if (hasNum) score += 25;
+      if (hasSym) score += 25;
+      
+      // Additional points for longer passwords
+      if (p.length >= 12) score += 10;
+      if (p.length >= 16) score += 10;
+      
+      // Cap at 100
+      score = Math.min(score, 100);
+
+      updateChecklist(hasLen, chkLen);
+      updateChecklist(hasUp, chkUp);
+      updateChecklist(hasNum, chkNum);
+      updateChecklist(hasSym, chkSym);
+
+      // Visual feedback for password strength
+      pwBar.style.width = score + '%';
+      
+      if (score < 40) {
+        pwBar.style.background = 'var(--danger)';
+      } else if (score < 70) {
+        pwBar.style.background = 'var(--warning)';
+      } else {
+        pwBar.style.background = 'var(--success)';
+      }
+
+      return score >= 70; // Considered strong
+    }
+
+    // Email validation
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    // Update form state based on validation
+    function updateFormState() {
+      const nameOk = fullName.value.trim().length >= 2;
+      const emailOk = validateEmail(email.value);
+      const mobileOk = /^[6-9][0-9]{9}$/.test(mobile.value);
+      const pwOk = evaluatePassword(password.value);
+      const match = password.value && (password.value === confirmPassword.value);
+      
+      // Update email status
+      if (email.value && !emailOk) {
+        emailStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid email address';
+        emailStatus.className = 'status err';
+      } else {
+        emailStatus.innerHTML = '';
+        emailStatus.className = 'status';
+      }
+      
+      // Update password match status
+      if (confirmPassword.value && !match) {
+        matchMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Passwords do not match';
+        matchMsg.className = 'status err';
+      } else if (confirmPassword.value && match) {
+        matchMsg.innerHTML = '<i class="fas fa-check-circle"></i> Passwords match';
+        matchMsg.className = 'status ok';
+      } else {
+        matchMsg.innerHTML = '';
+        matchMsg.className = 'status';
+      }
+
+      // Enable/disable signup button
+      signupBtn.disabled = !(nameOk && emailOk && mobileOk && pwOk && match);
+    }
+
+    // Add event listeners for form fields
+    fullName.addEventListener('input', updateFormState);
+    email.addEventListener('input', updateFormState);
+    mobile.addEventListener('input', updateFormState);
+    password.addEventListener('input', updateFormState);
+    confirmPassword.addEventListener('input', updateFormState);
+
+    // Form submission
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Show loading state
+      signupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+      signupBtn.disabled = true;
+      
+      // Simulate API call
+      try {
+        // In a real application, this would be an API call to your backend
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Mock successful signup
+        alert('Account created successfully! You can now login with your credentials.');
+        
+        // Redirect to login page
+        window.location.href = 'URS-1.html';
+      } catch (error) {
+        // Handle signup error
+        alert('There was an error creating your account. Please try again.');
+        signupBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+        signupBtn.disabled = false;
+      }
+    });
+
+    // Initialize UI state
+    updateFormState();
+  </script>
+</body>
+</html>

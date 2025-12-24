@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hirewale — Worker Registration (Step 3)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-600: #0ea5e9;
+      --brand-700: #0284c7;
+      --brand-500: #38bdf8;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --bg: #f8fafc;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% 10%, #e0f2fe 0%, transparent 60%),
+                  radial-gradient(1000px 500px at 90% 20%, #bae6fd 0%, transparent 60%),
+                  linear-gradient(180deg, #f0f9ff 0%, #ffffff 40%, #f8fafc 100%);
+      padding: 20px;
+    }
+
+    .shell {
+      width: min(100%, 880px);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 0.2px;
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 16px);
+      font-weight: 500;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #e2e8f0;
+      border-radius: 10px;
+      margin: 24px 0;
+      overflow: hidden;
+      height: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 37.5%;
+      background: linear-gradient(90deg, var(--brand-500), var(--brand-700));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: var(--glass-shadow);
+      padding: clamp(20px, 5vw, 40px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(2, 132, 199, 0.15);
+    }
+
+    form {
+      display: grid;
+      gap: 24px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .help {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      transition: var(--transition);
+    }
+
+    .field:focus-within {
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .field i {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .field input, .field select {
+      flex: 1;
+      font: inherit;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .field input::placeholder {
+      color: var(--muted-light);
+    }
+
+    .location-detect {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 16px;
+      border-left: 4px solid var(--brand-500);
+      text-align: center;
+    }
+
+    .location-detect-btn {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 auto;
+    }
+
+    .location-detect-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .location-detect-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .location-result {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(14, 165, 233, 0.1);
+      border-radius: 12px;
+      display: none;
+    }
+
+    .location-result.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .location-result h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--brand-700);
+    }
+
+    .location-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .location-detail {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .location-detail strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+    }
+
+    .map-placeholder {
+      height: 200px;
+      background: #e2e8f0;
+      border-radius: 12px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      border: 0;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--muted);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Loading animation */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+      .location-details {
+        grid-template-columns: 1fr;
+      }
+      
+      .actions {
+        flex-direction: column-reverse;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shell {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">Hirewale · Worker Registration</div>
+      <div class="tag">Step 3 of 8 — Location Details</div>
+    </header>
+
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+
+    <section class="card">
+      <form id="locationForm">
+        <!-- Location Detection -->
+        <div class="form-group">
+          <label>
+            <i class="fas fa-map-marker-alt"></i>
+            Auto-Detect Location
+          </label>
+          <div class="location-detect">
+            <p style="margin-bottom: 16px; color: var(--muted);">Let us automatically detect your current location to find jobs near you</p>
+            <button type="button" id="detectBtn" class="location-detect-btn">
+              <i class="fas fa-location-arrow"></i> Detect My Location
+            </button>
+            
+            <div class="location-result" id="locationResult">
+              <h4>
+                <i class="fas fa-check-circle"></i>
+                Location Detected
+              </h4>
+              <div class="location-details">
+                <div class="location-detail">
+                  <strong>Latitude</strong>
+                  <span id="latitude">-</span>
+                </div>
+                <div class="location-detail">
+                  <strong>Longitude</strong>
+                  <span id="longitude">-</span>
+                </div>
+                <div class="location-detail">
+                  <strong>Accuracy</strong>
+                  <span id="accuracy">-</span>
+                </div>
+                <div class="location-detail">
+                  <strong>Approx. Address</strong>
+                  <span id="approxAddress">-</span>
+                </div>
+              </div>
+              
+              <div class="map-placeholder">
+                <i class="fas fa-map-marked-alt" style="font-size: 32px;"></i>
+                <p>Map preview would appear here with API integration</p>
+                <small style="color: var(--muted-light);">(Map integration requires API key)</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manual Location Input -->
+        <div class="form-group">
+          <label>
+            <i class="fas fa-edit"></i>
+            Manual Location Entry
+          </label>
+          <div class="field">
+            <i class="fas fa-city"></i>
+            <input type="text" id="city" placeholder="Enter your city" required>
+          </div>
+          
+          <div class="field">
+            <i class="fas fa-road"></i>
+            <input type="text" id="area" placeholder="Enter area, street, or locality" required>
+          </div>
+          
+          <div class="field">
+            <i class="fas fa-map-pin"></i>
+            <input type="text" id="pincode" placeholder="Pincode (optional)">
+          </div>
+          
+          <div class="field">
+            <i class="fas fa-globe-asia"></i>
+            <select id="state" required>
+              <option value="">Select State</option>
+              <option value="KA">Karnataka</option>
+              <option value="MH">Maharashtra</option>
+              <option value="TN">Tamil Nadu</option>
+              <option value="KL">Kerala</option>
+              <option value="AP">Andhra Pradesh</option>
+              <option value="TL">Telangana</option>
+              <option value="GJ">Gujarat</option>
+              <option value="RJ">Rajasthan</option>
+              <option value="UP">Uttar Pradesh</option>
+              <option value="WB">West Bengal</option>
+              <option value="MP">Madhya Pradesh</option>
+              <option value="PB">Punjab</option>
+              <option value="HR">Haryana</option>
+              <option value="OR">Odisha</option>
+              <option value="BR">Bihar</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='WRS-2.html'">
+            <i class="fas fa-arrow-left"></i> Previous Step
+          </button>
+          <button type="submit" id="nextBtn" class="btn btn-primary">
+            Next Step <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Elements
+      const detectBtn = document.getElementById('detectBtn');
+      const locationResult = document.getElementById('locationResult');
+      const latitudeEl = document.getElementById('latitude');
+      const longitudeEl = document.getElementById('longitude');
+      const accuracyEl = document.getElementById('accuracy');
+      const approxAddressEl = document.getElementById('approxAddress');
+      const cityInput = document.getElementById('city');
+      const areaInput = document.getElementById('area');
+      const pincodeInput = document.getElementById('pincode');
+      const stateInput = document.getElementById('state');
+      const nextBtn = document.getElementById('nextBtn');
+      const locationForm = document.getElementById('locationForm');
+
+      // Load previously saved data if any
+      const savedData = JSON.parse(sessionStorage.getItem('hirewale_worker_step3') || '{}');
+      if (savedData.location) {
+        if (savedData.location.coordinates) {
+          latitudeEl.textContent = savedData.location.coordinates.latitude;
+          longitudeEl.textContent = savedData.location.coordinates.longitude;
+          accuracyEl.textContent = savedData.location.coordinates.accuracy + ' meters';
+          locationResult.classList.add('show');
+        }
+        
+        if (savedData.location.city) cityInput.value = savedData.location.city;
+        if (savedData.location.area) areaInput.value = savedData.location.area;
+        if (savedData.location.pincode) pincodeInput.value = savedData.location.pincode;
+        if (savedData.location.state) stateInput.value = savedData.location.state;
+      }
+
+      // Location detection
+      detectBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+          alert('Geolocation is not supported by your browser. Please enter your location manually.');
+          return;
+        }
+
+        // Show loading state
+        detectBtn.innerHTML = '<div class="spinner"></div> Detecting...';
+        detectBtn.disabled = true;
+
+        navigator.geolocation.getCurrentPosition(
+          // Success callback
+          (position) => {
+            const { latitude, longitude, accuracy } = position.coords;
+            
+            // Update UI with coordinates
+            latitudeEl.textContent = latitude.toFixed(6);
+            longitudeEl.textContent = longitude.toFixed(6);
+            accuracyEl.textContent = Math.round(accuracy) + ' meters';
+            
+            // Show location result
+            locationResult.classList.add('show');
+            
+            // Reset button
+            detectBtn.innerHTML = '<i class="fas fa-check-circle"></i> Location Detected';
+            
+            // Try to get approximate address using reverse geocoding (simulated)
+            getApproximateAddress(latitude, longitude);
+          },
+          // Error callback
+          (error) => {
+            let errorMessage;
+            switch(error.code) {
+              case error.PERMISSION_DENIED:
+                errorMessage = 'Location access was denied. Please allow location access or enter manually.';
+                break;
+              case error.POSITION_UNAVAILABLE:
+                errorMessage = 'Location information is unavailable. Please try again or enter manually.';
+                break;
+              case error.TIMEOUT:
+                errorMessage = 'Location request timed out. Please try again or enter manually.';
+                break;
+              default:
+                errorMessage = 'An unknown error occurred. Please enter your location manually.';
+            }
+            
+            alert(errorMessage);
+            
+            // Reset button
+            detectBtn.innerHTML = '<i class="fas fa-location-arrow"></i> Detect My Location';
+            detectBtn.disabled = false;
+          },
+          // Options
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 60000
+          }
+        );
+      });
+
+      // Simulated reverse geocoding
+      function getApproximateAddress(lat, lng) {
+        // In a real application, you would use a geocoding API here
+        // This is a simulation that just shows coordinates
+        
+        // Simulate API call delay
+        setTimeout(() => {
+          approxAddressEl.textContent = `Near coordinates: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+          
+          // Try to suggest city based on coordinates (simulated)
+          if (lat > 12.8 && lat < 13.2 && lng > 77.4 && lng < 77.8) {
+            cityInput.value = 'Bengaluru';
+            stateInput.value = 'KA';
+          } else if (lat > 18.4 && lat < 19.2 && lng > 72.7 && lng < 73.2) {
+            cityInput.value = 'Mumbai';
+            stateInput.value = 'MH';
+          } else if (lat > 28.4 && lat < 28.9 && lng > 76.8 && lng < 77.4) {
+            cityInput.value = 'Delhi';
+            stateInput.value = 'DL';
+          } else if (lat > 13.0 && lat < 13.2 && lng > 80.2 && lng < 80.4) {
+            cityInput.value = 'Chennai';
+            stateInput.value = 'TN';
+          }
+        }, 1500);
+      }
+
+      // Form submission
+      locationForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const city = cityInput.value.trim();
+        const area = areaInput.value.trim();
+        const pincode = pincodeInput.value.trim();
+        const state = stateInput.value;
+        
+        if (!city || !area || !state) {
+          alert('Please fill in all required location fields.');
+          return;
+        }
+
+        // Prepare location data
+        const locationData = {
+          city,
+          area,
+          pincode,
+          state
+        };
+        
+        // Add coordinates if available
+        if (locationResult.classList.contains('show')) {
+          locationData.coordinates = {
+            latitude: parseFloat(latitudeEl.textContent),
+            longitude: parseFloat(longitudeEl.textContent),
+            accuracy: parseInt(accuracyEl.textContent)
+          };
+        }
+
+        // Save to sessionStorage
+        const workerData = JSON.parse(sessionStorage.getItem('hirewale_worker_step2') || '{}');
+        workerData.location = locationData;
+        sessionStorage.setItem('hirewale_worker_step3', JSON.stringify(workerData));
+
+        // Show loading state
+        nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        nextBtn.disabled = true;
+
+        // Simulate API call delay
+        setTimeout(() => {
+          window.location.href = 'WRS-4.html';
+        }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>

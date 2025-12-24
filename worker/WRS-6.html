@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hirewale — Worker Registration (Step 6)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-600: #0ea5e9;
+      --brand-700: #0284c7;
+      --brand-500: #38bdf8;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --bg: #f8fafc;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% 10%, #e0f2fe 0%, transparent 60%),
+                  radial-gradient(1000px 500px at 90% 20%, #bae6fd 0%, transparent 60%),
+                  linear-gradient(180deg, #f0f9ff 0%, #ffffff 40%, #f8fafc 100%);
+      padding: 20px;
+    }
+
+    .shell {
+      width: min(100%, 880px);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 0.2px;
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 16px);
+      font-weight: 500;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #e2e8f0;
+      border-radius: 10px;
+      margin: 24px 0;
+      overflow: hidden;
+      height: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 75%;
+      background: linear-gradient(90deg, var(--brand-500), var(--brand-700));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: var(--glass-shadow);
+      padding: clamp(20px, 5vw, 40px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(2, 132, 199, 0.15);
+    }
+
+    form {
+      display: grid;
+      gap: 24px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .help {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      transition: var(--transition);
+    }
+
+    .field:focus-within {
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .field i {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .field input, .field select {
+      flex: 1;
+      font: inherit;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .field input::placeholder {
+      color: var(--muted-light);
+    }
+
+    .payment-toggle {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 16px;
+    }
+
+    .toggle-option {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .toggle-option.active {
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-section {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .payment-section.active {
+      display: grid;
+      gap: 20px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bank-logo {
+      width: 60px;
+      height: 60px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 24px;
+      color: var(--muted);
+    }
+
+    .bank-info {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .bank-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .bank-branch {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .security-note {
+      background: #f0f9ff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 16px;
+      border-left: 4px solid var(--brand-500);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .security-note i {
+      font-size: 20px;
+      color: var(--brand-600);
+      margin-top: 2px;
+    }
+
+    .security-content h4 {
+      margin-bottom: 8px;
+      color: var(--brand-700);
+    }
+
+    .security-content p {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      border: 0;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--muted);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .validation-message {
+      font-size: 13px;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .validation-ok {
+      color: var(--success);
+    }
+
+    .validation-error {
+      color: var(--danger);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+      .actions {
+        flex-direction: column-reverse;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .payment-toggle {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shell {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">Hirewale · Worker Registration</div>
+      <div class="tag">Step 6 of 8 — Payment Details</div>
+    </header>
+
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+
+    <section class="card">
+      <form id="bankForm">
+        <!-- Payment Method Toggle -->
+        <div class="payment-toggle">
+          <div class="toggle-option active" id="bankOption">
+            <i class="fas fa-university"></i>
+            Bank Account
+          </div>
+          <div class="toggle-option" id="upiOption">
+            <i class="fas fa-mobile-alt"></i>
+            UPI
+          </div>
+        </div>
+
+        <!-- Bank Account Section -->
+        <div class="payment-section active" id="bankSection">
+          <div class="form-group">
+            <label for="holderName">
+              <i class="fas fa-user"></i>
+              Account Holder Name
+            </label>
+            <div class="field">
+              <i class="fas fa-signature"></i>
+              <input type="text" id="holderName" placeholder="Enter account holder name" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="accountNumber">
+              <i class="fas fa-hashtag"></i>
+              Account Number
+            </label>
+            <div class="field">
+              <i class="fas fa-credit-card"></i>
+              <input type="text" id="accountNumber" placeholder="Enter account number" required maxlength="18">
+              <div id="accountValidation" class="validation-message"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ifsc">
+              <i class="fas fa-code"></i>
+              IFSC Code
+            </label>
+            <div class="field">
+              <i class="fas fa-bank"></i>
+              <input type="text" id="ifsc" placeholder="Enter IFSC code" required maxlength="11">
+              <div id="ifscValidation" class="validation-message"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bankConfirm">
+              <i class="fas fa-redo"></i>
+              Confirm Account Number
+            </label>
+            <div class="field">
+              <i class="fas fa-check-circle"></i>
+              <input type="text" id="bankConfirm" placeholder="Re-enter account number" required>
+              <div id="confirmValidation" class="validation-message"></div>
+            </div>
+          </div>
+
+          <!-- Bank Info Preview (will be populated after IFSC validation) -->
+          <div id="bankInfo" style="display: none;">
+            <div class="bank-logo">
+              <i class="fas fa-university"></i>
+            </div>
+            <div class="bank-info">
+              <div class="bank-name" id="bankName">Bank Name</div>
+              <div class="bank-branch" id="bankBranch">Branch Name</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPI Section -->
+        <div class="payment-section" id="upiSection">
+          <div class="form-group">
+            <label for="upiId">
+              <i class="fas fa-qrcode"></i>
+              UPI ID
+            </label>
+            <div class="field">
+              <i class="fas fa-at"></i>
+              <input type="text" id="upiId" placeholder="example@upi" pattern=".+@.+" title="Enter a valid UPI ID">
+              <div id="upiValidation" class="validation-message"></div>
+            </div>
+            <p class="help">Typically your phone number followed by your UPI provider (e.g. 9876543210@ybl)</p>
+          </div>
+
+          <div class="form-group">
+            <label for="upiConfirm">
+              <i class="fas fa-redo"></i>
+              Confirm UPI ID
+            </label>
+            <div class="field">
+              <i class="fas fa-check-circle"></i>
+              <input type="text" id="upiConfirm" placeholder="Re-enter UPI ID">
+              <div id="upiConfirmValidation" class="validation-message"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Note -->
+        <div class="security-note">
+          <i class="fas fa-shield-alt"></i>
+          <div class="security-content">
+            <h4>Secure & Encrypted</h4>
+            <p>Your banking details are encrypted and securely stored. We never share your financial information with anyone.</p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='WRS-5.html'">
+            <i class="fas fa-arrow-left"></i> Previous Step
+          </button>
+          <button type="submit" id="nextBtn" class="btn btn-primary">
+            Next Step <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Elements
+      const bankOption = document.getElementById('bankOption');
+      const upiOption = document.getElementById('upiOption');
+      const bankSection = document.getElementById('bankSection');
+      const upiSection = document.getElementById('upiSection');
+      const holderName = document.getElementById('holderName');
+      const accountNumber = document.getElementById('accountNumber');
+      const ifsc = document.getElementById('ifsc');
+      const bankConfirm = document.getElementById('bankConfirm');
+      const upiId = document.getElementById('upiId');
+      const upiConfirm = document.getElementById('upiConfirm');
+      const accountValidation = document.getElementById('accountValidation');
+      const ifscValidation = document.getElementById('ifscValidation');
+      const confirmValidation = document.getElementById('confirmValidation');
+      const upiValidation = document.getElementById('upiValidation');
+      const upiConfirmValidation = document.getElementById('upiConfirmValidation');
+      const bankInfo = document.getElementById('bankInfo');
+      const bankName = document.getElementById('bankName');
+      const bankBranch = document.getElementById('bankBranch');
+      const nextBtn = document.getElementById('nextBtn');
+      const bankForm = document.getElementById('bankForm');
+
+      let paymentMethod = 'bank'; // 'bank' or 'upi'
+      let ifscValidated = false;
+
+      // Load previously saved data if any
+      const savedData = JSON.parse(sessionStorage.getItem('hirewale_worker_step6') || '{}');
+      if (savedData.paymentMethod) {
+        paymentMethod = savedData.paymentMethod;
+        updatePaymentMethod();
+        
+        if (paymentMethod === 'bank' && savedData.bankDetails) {
+          holderName.value = savedData.bankDetails.holderName || '';
+          accountNumber.value = savedData.bankDetails.accountNumber || '';
+          ifsc.value = savedData.bankDetails.ifsc || '';
+          bankConfirm.value = savedData.bankDetails.confirmAccount || '';
+          
+          if (savedData.bankDetails.bankInfo) {
+            bankName.textContent = savedData.bankDetails.bankInfo.name || '';
+            bankBranch.textContent = savedData.bankDetails.bankInfo.branch || '';
+            bankInfo.style.display = 'block';
+            ifscValidated = true;
+          }
+        } else if (paymentMethod === 'upi' && savedData.upiDetails) {
+          upiId.value = savedData.upiDetails.upiId || '';
+          upiConfirm.value = savedData.upiDetails.confirmUpi || '';
+        }
+      }
+
+      // Payment method toggle
+      bankOption.addEventListener('click', () => {
+        paymentMethod = 'bank';
+        updatePaymentMethod();
+      });
+
+      upiOption.addEventListener('click', () => {
+        paymentMethod = 'upi';
+        updatePaymentMethod();
+      });
+
+      function updatePaymentMethod() {
+        if (paymentMethod === 'bank') {
+          bankOption.classList.add('active');
+          upiOption.classList.remove('active');
+          bankSection.classList.add('active');
+          upiSection.classList.remove('active');
+        } else {
+          bankOption.classList.remove('active');
+          upiOption.classList.add('active');
+          bankSection.classList.remove('active');
+          upiSection.classList.add('active');
+        }
+        validateForm();
+      }
+
+      // Validation functions
+      function validateAccountNumber() {
+        const value = accountNumber.value.trim();
+        if (!value) {
+          accountValidation.textContent = '';
+          return false;
+        }
+        
+        // Basic validation - account number should be numeric and between 9-18 digits
+        if (!/^\d+$/.test(value)) {
+          accountValidation.innerHTML = '<i class="fas fa-times-circle"></i> Account number must contain only digits';
+          accountValidation.className = 'validation-message validation-error';
+          return false;
+        }
+        
+        if (value.length < 9 || value.length > 18) {
+          accountValidation.innerHTML = '<i class="fas fa-times-circle"></i> Account number must be 9-18 digits';
+          accountValidation.className = 'validation-message validation-error';
+          return false;
+        }
+        
+        accountValidation.innerHTML = '<i class="fas fa-check-circle"></i> Valid account number';
+        accountValidation.className = 'validation-message validation-ok';
+        return true;
+      }
+
+      function validateIFSC() {
+        const value = ifsc.value.trim().toUpperCase();
+        if (!value) {
+          ifscValidation.textContent = '';
+          return false;
+        }
+        
+        // Basic IFSC format validation (4 letters, 0, then 6 alphanumeric)
+        if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(value)) {
+          ifscValidation.innerHTML = '<i class="fas fa-times-circle"></i> Invalid IFSC format';
+          ifscValidation.className = 'validation-message validation-error';
+          ifscValidated = false;
+          return false;
+        }
+        
+        // In a real app, you would call an API to validate IFSC
+        // For demo purposes, we'll simulate validation
+        ifscValidation.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validating...';
+        
+        setTimeout(() => {
+          // Simulate API call to validate IFSC
+          // This is a mock implementation - in a real app, use a proper IFSC validation API
+          const bankData = {
+            'SBIN0123456': { name: 'State Bank of India', branch: 'Mumbai Main Branch' },
+            'HDFC0001234': { name: 'HDFC Bank', branch: 'Delhi Central' },
+            'ICIC0005678': { name: 'ICICI Bank', branch: 'Bangalore South' },
+            'AXIS0123456': { name: 'Axis Bank', branch: 'Chennai Central' },
+            'KKBK0001234': { name: 'Kotak Mahindra Bank', branch: 'Pune Main' }
+          };
+          
+          if (bankData[value]) {
+            ifscValidation.innerHTML = '<i class="fas fa-check-circle"></i> IFSC validated';
+            ifscValidation.className = 'validation-message validation-ok';
+            bankName.textContent = bankData[value].name;
+            bankBranch.textContent = bankData[value].branch;
+            bankInfo.style.display = 'block';
+            ifscValidated = true;
+          } else {
+            ifscValidation.innerHTML = '<i class="fas fa-times-circle"></i> IFSC not found';
+            ifscValidation.className = 'validation-message validation-error';
+            bankInfo.style.display = 'none';
+            ifscValidated = false;
+          }
+          
+          validateForm();
+        }, 1500);
+        
+        return true;
+      }
+
+      function validateBankConfirm() {
+        const value = bankConfirm.value.trim();
+        if (!value) {
+          confirmValidation.textContent = '';
+          return false;
+        }
+        
+        if (value !== accountNumber.value.trim()) {
+          confirmValidation.innerHTML = '<i class="fas fa-times-circle"></i> Account numbers do not match';
+          confirmValidation.className = 'validation-message validation-error';
+          return false;
+        }
+        
+        confirmValidation.innerHTML = '<i class="fas fa-check-circle"></i> Account numbers match';
+        confirmValidation.className = 'validation-message validation-ok';
+        return true;
+      }
+
+      function validateUPI() {
+        const value = upiId.value.trim();
+        if (!value) {
+          upiValidation.textContent = '';
+          return false;
+        }
+        
+        // Basic UPI validation (should contain @)
+        if (!value.includes('@')) {
+          upiValidation.innerHTML = '<i class="fas fa-times-circle"></i> Invalid UPI ID format';
+          upiValidation.className = 'validation-message validation-error';
+          return false;
+        }
+        
+        upiValidation.innerHTML = '<i class="fas fa-check-circle"></i> Valid UPI ID';
+        upiValidation.className = 'validation-message validation-ok';
+        return true;
+      }
+
+      function validateUPIConfirm() {
+        const value = upiConfirm.value.trim();
+        if (!value) {
+          upiConfirmValidation.textContent = '';
+          return false;
+        }
+        
+        if (value !== upiId.value.trim()) {
+          upiConfirmValidation.innerHTML = '<i class="fas fa-times-circle"></i> UPI IDs do not match';
+          upiConfirmValidation.className = 'validation-message validation-error';
+          return false;
+        }
+        
+        upiConfirmValidation.innerHTML = '<i class="fas fa-check-circle"></i> UPI IDs match';
+        upiConfirmValidation.className = 'validation-message validation-ok';
+        return true;
+      }
+
+      function validateForm() {
+        let isValid = false;
+        
+        if (paymentMethod === 'bank') {
+          const accountValid = validateAccountNumber();
+          const ifscValid = ifscValidated; // Already validated asynchronously
+          const confirmValid = validateBankConfirm();
+          const nameValid = holderName.value.trim().length > 0;
+          
+          isValid = accountValid && ifscValid && confirmValid && nameValid;
+        } else {
+          const upiValid = validateUPI();
+          const upiConfirmValid = validateUPIConfirm();
+          
+          isValid = upiValid && upiConfirmValid;
+        }
+        
+        nextBtn.disabled = !isValid;
+        return isValid;
+      }
+
+      // Add event listeners for validation
+      holderName.addEventListener('input', validateForm);
+      accountNumber.addEventListener('input', validateForm);
+      ifsc.addEventListener('blur', validateIFSC);
+      bankConfirm.addEventListener('input', validateForm);
+      upiId.addEventListener('input', validateForm);
+      upiConfirm.addEventListener('input', validateForm);
+
+      // Form submission
+      bankForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        if (!validateForm()) {
+          alert('Please fix the validation errors before proceeding.');
+          return;
+        }
+
+        // Prepare payment data
+        let paymentData;
+        if (paymentMethod === 'bank') {
+          paymentData = {
+            method: 'bank',
+            bankDetails: {
+              holderName: holderName.value.trim(),
+              accountNumber: accountNumber.value.trim(),
+              ifsc: ifsc.value.trim().toUpperCase(),
+              confirmAccount: bankConfirm.value.trim(),
+              bankInfo: {
+                name: bankName.textContent,
+                branch: bankBranch.textContent
+              }
+            }
+          };
+        } else {
+          paymentData = {
+            method: 'upi',
+            upiDetails: {
+              upiId: upiId.value.trim(),
+              confirmUpi: upiConfirm.value.trim()
+            }
+          };
+        }
+
+        // Save to sessionStorage
+        const workerData = JSON.parse(sessionStorage.getItem('hirewale_worker_step5') || '{}');
+        workerData.payment = paymentData;
+        sessionStorage.setItem('hirewale_worker_step6', JSON.stringify(workerData));
+
+        // Show loading state
+        nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        nextBtn.disabled = true;
+
+        // Simulate API call delay
+        setTimeout(() => {
+          window.location.href = 'WRS-7.html';
+        }, 1500);
+      });
+
+      // Initial validation
+      validateForm();
+    });
+  </script>
+</body>
+</html>

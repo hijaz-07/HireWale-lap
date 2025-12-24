@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hirewale · Worker Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-600: #0ea5e9;
+      --brand-700: #0284c7;
+      --brand-500: #38bdf8;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --bg: #f8fafc;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% 10%, #e0f2fe 0%, transparent 60%),
+                  radial-gradient(1000px 500px at 90% 20%, #bae6fd 0%, transparent 60%),
+                  linear-gradient(180deg, #f0f9ff 0%, #ffffff 40%, #f8fafc 100%);
+      padding: 20px;
+    }
+
+    .shell {
+      width: min(100%, 480px);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 0.2px;
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 16px);
+      font-weight: 500;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: var(--glass-shadow);
+      padding: clamp(24px, 5vw, 36px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(2, 132, 199, 0.15);
+    }
+
+    form {
+      display: grid;
+      gap: 24px;
+    }
+
+    .row {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .help {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      transition: var(--transition);
+    }
+
+    .field:focus-within {
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .field i {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .field input {
+      flex: 1;
+      font: inherit;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .field input::placeholder {
+      color: var(--muted-light);
+    }
+
+    .btn {
+      border: 0;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: #fff;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .password-toggle {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      transition: var(--transition);
+    }
+
+    .password-toggle:hover {
+      color: var(--brand-600);
+    }
+
+    .extra-links {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .extra-links a {
+      color: var(--brand-600);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .extra-links a:hover {
+      color: var(--brand-700);
+      text-decoration: underline;
+    }
+
+    .status {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .status.ok {
+      color: var(--success);
+    }
+
+    .status.err {
+      color: var(--danger);
+    }
+
+    .hint-box {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 8px;
+      border-left: 4px solid var(--brand-500);
+      display: none;
+    }
+
+    .hint-box.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .hint-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--brand-700);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hint-content {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .shell {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .extra-links {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <i style="font-size: 25px;" class="fas fa-hands-helping"></i>
+        Hirewale
+      </div>
+      <div class="tag">Worker Login</div>
+    </header>
+
+    <section class="card">
+      <form id="loginForm" autocomplete="off">
+        <!-- Email -->
+        <div class="row">
+          <label for="email">
+            <i class="fas fa-envelope"></i>
+            Email Address
+          </label>
+          <div class="field">
+            <i class="fas fa-at"></i>
+            <input id="email" name="email" type="email" inputmode="email" placeholder="you@example.com" required />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="row">
+          <label for="password">
+            <i class="fas fa-lock"></i>
+            Password
+          </label>
+          <div class="field">
+            <i class="fas fa-lock"></i>
+            <input id="password" name="password" type="password" placeholder="Enter your password" required />
+            <button type="button" class="password-toggle" id="passwordToggle">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="status" id="loginStatus" aria-live="polite"></div>
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn btn-primary">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+        
+        <div class="extra-links">
+          <a href="employee.html"><i class="fas fa-user-plus"></i> Create Account</a>
+          <a href="worker-reset-password.html"><i class="fas fa-key"></i> Forgot Password?</a>
+        </div>
+        
+        <div class="tiny" style="margin-top: 24px; font-size: 12px; color: var(--muted-light); text-align: center;">
+          By logging in, you agree to our <a href="#" style="color: var(--brand-600);">Terms of Service</a> and <a href="#" style="color: var(--brand-600);">Privacy Policy</a>.
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    // Elements
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const passwordToggle = document.getElementById('passwordToggle');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginStatus = document.getElementById('loginStatus');
+    const loginForm = document.getElementById('loginForm');
+
+    // Password visibility toggle
+    passwordToggle.addEventListener('click', () => {
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    // Form submission
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Validate inputs
+      if (!email.value || !password.value) {
+        loginStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please fill in all fields';
+        loginStatus.className = 'status err';
+        return;
+      }
+      
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.value)) {
+        loginStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid email address';
+        loginStatus.className = 'status err';
+        return;
+      }
+      
+      // Show loading state
+      loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+      loginBtn.disabled = true;
+      
+      // Simulate API call
+      try {
+        // In a real application, this would be an API call to your backend
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Mock successful login
+        loginStatus.innerHTML = '<i class="fas fa-check-circle"></i> Login successful! Redirecting...';
+        loginStatus.className = 'status ok';
+        
+        // Redirect to dashboard after successful login
+        setTimeout(() => {
+          window.location.href = 'W-dashboard.html';
+        }, 1000);
+      } catch (error) {
+        // Handle login error
+        loginStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid email or password';
+        loginStatus.className = 'status err';
+        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+        loginBtn.disabled = false;
+      }
+    });
+
+    // Clear error status when user starts typing
+    email.addEventListener('input', () => {
+      if (loginStatus.textContent) {
+        loginStatus.textContent = '';
+        loginStatus.className = 'status';
+      }
+    });
+
+    password.addEventListener('input', () => {
+      if (loginStatus.textContent) {
+        loginStatus.textContent = '';
+        loginStatus.className = 'status';
+      }
+    });
+  </script>
+</body>
+</html>

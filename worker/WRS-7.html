@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hirewale — Worker Registration (Step 7)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-600: #0ea5e9;
+      --brand-700: #0284c7;
+      --brand-500: #38bdf8;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --bg: #f8fafc;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% 10%, #e0f2fe 0%, transparent 60%),
+                  radial-gradient(1000px 500px at 90% 20%, #bae6fd 0%, transparent 60%),
+                  linear-gradient(180deg, #f0f9ff 0%, #ffffff 40%, #f8fafc 100%);
+      padding: 20px;
+    }
+
+    .shell {
+      width: min(100%, 880px);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 0.2px;
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 16px);
+      font-weight: 500;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #e2e8f0;
+      border-radius: 10px;
+      margin: 24px 0;
+      overflow: hidden;
+      height: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 87.5%;
+      background: linear-gradient(90deg, var(--brand-500), var(--brand-700));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: var(--glass-shadow);
+      padding: clamp(20px, 5vw, 40px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(2, 132, 199, 0.15);
+    }
+
+    form {
+      display: grid;
+      gap: 24px;
+    }
+
+    .terms-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .terms-icon {
+      width: 50px;
+      height: 50px;
+      background: #f0f9ff;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--brand-600);
+    }
+
+    .terms-title {
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--ink);
+    }
+
+    .terms-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      background: #f9fafb;
+      height: 280px;
+      overflow-y: auto;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    .terms-box:hover {
+      box-shadow: inset 0 0 0 2px var(--brand-500);
+    }
+
+    .terms-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .terms-box::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+
+    .terms-box::-webkit-scrollbar-thumb {
+      background: var(--brand-500);
+      border-radius: 10px;
+    }
+
+    .terms-box p {
+      margin-bottom: 16px;
+      padding-left: 8px;
+      border-left: 2px solid transparent;
+      transition: var(--transition);
+    }
+
+    .terms-box p:hover {
+      border-left: 2px solid var(--brand-500);
+      padding-left: 12px;
+    }
+
+    .terms-box strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 16px;
+      transition: var(--transition);
+    }
+
+    .checkbox-container:hover {
+      background: #f0f9ff;
+      transform: translateY(-2px);
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--muted-light);
+      border-radius: 6px;
+      margin-top: 2px;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .checkbox-container input[type="checkbox"]:checked {
+      background: var(--brand-600);
+      border-color: var(--brand-600);
+    }
+
+    .checkbox-container input[type="checkbox"]:checked::after {
+      content: "✓";
+      position: absolute;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .checkbox-label {
+      flex: 1;
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--ink);
+      cursor: pointer;
+      line-height: 1.5;
+    }
+
+    .checkbox-label a {
+      color: var(--brand-600);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .checkbox-label a:hover {
+      color: var(--brand-700);
+      text-decoration: underline;
+    }
+
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      border: 0;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--muted);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .read-time {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .read-time i {
+      font-size: 14px;
+    }
+
+    .security-note {
+      background: #f0f9ff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 16px;
+      border-left: 4px solid var(--brand-500);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .security-note i {
+      font-size: 20px;
+      color: var(--brand-600);
+      margin-top: 2px;
+    }
+
+    .security-content h4 {
+      margin-bottom: 8px;
+      color: var(--brand-700);
+    }
+
+    .security-content p {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+      .actions {
+        flex-direction: column-reverse;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .terms-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shell {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .terms-box {
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">Hirewale · Worker Registration</div>
+      <div class="tag">Step 7 of 8 — Terms & Conditions</div>
+    </header>
+
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+
+    <section class="card">
+      <form id="termsForm">
+        <div class="terms-header">
+          <div class="terms-icon">
+            <i class="fas fa-file-contract"></i>
+          </div>
+          <div>
+            <h2 class="terms-title">Terms & Conditions Agreement</h2>
+            <div class="read-time">
+              <i class="fas fa-clock"></i> Estimated reading time: 3 minutes
+            </div>
+          </div>
+        </div>
+
+        <div class="terms-box">
+          <p><strong>1.</strong> Workers must maintain professional behavior with customers at all times. Any reported misconduct may result in temporary suspension or permanent termination of your account after investigation.</p>
+          
+          <p><strong>2.</strong> Commission of 15-20% will be applied on each completed job as per Hirewale policy. This commission covers platform maintenance, customer support, and payment processing services.</p>
+          
+          <p><strong>3.</strong> Cancellation by worker should be avoided; repeated cancellations may affect your ranking and visibility on the platform. Cancellations with less than 24 hours notice will incur penalty points.</p>
+          
+          <p><strong>4.</strong> Personal information, bank details, and documents must be accurate and valid. You are required to update any changes to your information within 14 days of the change occurring.</p>
+          
+          <p><strong>5.</strong> Hirewale reserves the right to verify submitted documents and profiles. We may perform background checks or request additional verification at our discretion.</p>
+          
+          <p><strong>6.</strong> Any fraudulent activity, including but not limited to fake reviews, identity theft, or payment fraud will lead to permanent account suspension and may result in legal action.</p>
+          
+          <p><strong>7.</strong> By agreeing, you accept the Hirewale Service Policy and Terms & Conditions in their entirety. This includes our Privacy Policy, Payment Terms, and Community Guidelines.</p>
+          
+          <p><strong>8.</strong> You retain ownership of your intellectual property but grant Hirewale a license to use your profile information and work portfolio for marketing and platform operations.</p>
+          
+          <p><strong>9.</strong> Disputes between workers and clients should be reported through our official resolution system. Hirewale will mediate disputes according to our published Dispute Resolution Policy.</p>
+          
+          <p><strong>10.</strong> These terms may be updated periodically. Continued use of the platform constitutes acceptance of the updated terms. Major changes will be communicated via email 30 days in advance.</p>
+        </div>
+
+        <div class="checkbox-container">
+          <input type="checkbox" id="agree" required>
+          <label for="agree" class="checkbox-label">
+            I have read and agree to Hirewale's <a href="#">Terms & Conditions</a>, <a href="#">Privacy Policy</a>, and <a href="#">Service Agreement</a>. I understand that this is a legally binding agreement.
+          </label>
+        </div>
+
+        <div class="security-note">
+          <i class="fas fa-shield-alt"></i>
+          <div class="security-content">
+            <h4>Your Agreement is Secure</h4>
+            <p>This agreement is digitally recorded and encrypted. You can access your accepted terms at any time through your account settings.</p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='WRS-6.html'">
+            <i class="fas fa-arrow-left"></i> Previous Step
+          </button>
+          <button type="submit" id="nextBtn" class="btn btn-primary">
+            Next Step <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const termsForm = document.getElementById('termsForm');
+      const agreeCheckbox = document.getElementById('agree');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      // Load previously saved data if any
+      const savedData = JSON.parse(sessionStorage.getItem('hirewale_worker_step7') || '{}');
+      if (savedData.agreedTerms) {
+        agreeCheckbox.checked = true;
+        nextBtn.disabled = false;
+      }
+      
+      // Validate form when checkbox changes
+      agreeCheckbox.addEventListener('change', function() {
+        nextBtn.disabled = !this.checked;
+        
+        // Add pulse animation when user agrees
+        if (this.checked) {
+          nextBtn.classList.add('pulse');
+        } else {
+          nextBtn.classList.remove('pulse');
+        }
+      });
+      
+      // Form submission
+      termsForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (!agreeCheckbox.checked) {
+          // Show validation error with animation
+          const checkboxContainer = agreeCheckbox.closest('.checkbox-container');
+          checkboxContainer.style.animation = 'shake 0.5s';
+          setTimeout(() => {
+            checkboxContainer.style.animation = '';
+          }, 500);
+          
+          return;
+        }
+        
+        // Save to sessionStorage
+        const workerData = JSON.parse(sessionStorage.getItem('hirewale_worker_step6') || '{}');
+        workerData.agreedTerms = true;
+        workerData.agreedTimestamp = new Date().toISOString();
+        sessionStorage.setItem('hirewale_worker_step7', JSON.stringify(workerData));
+        
+        // Show loading state
+        nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        nextBtn.disabled = true;
+        
+        // Simulate API call delay
+        setTimeout(() => {
+          window.location.href = 'WRS-8.html';
+        }, 1500);
+      });
+      
+      // Add CSS for shake animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+          20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+      `;
+      document.head.appendChild(style);
+    });
+  </script>
+</body>
+</html>

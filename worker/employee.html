@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hirewale · Worker Registration · Step 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-600: #0ea5e9;
+      --brand-700: #0284c7;
+      --brand-500: #38bdf8;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --bg: #f8fafc;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% 10%, #e0f2fe 0%, transparent 60%),
+                  radial-gradient(1000px 500px at 90% 20%, #bae6fd 0%, transparent 60%),
+                  linear-gradient(180deg, #f0f9ff 0%, #ffffff 40%, #f8fafc 100%);
+      padding: 20px;
+    }
+
+    .shell {
+      width: min(100%, 880px);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 0.2px;
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 16px);
+      font-weight: 500;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #e2e8f0;
+      border-radius: 10px;
+      margin: 24px 0;
+      overflow: hidden;
+      height: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 12.5%;
+      background: linear-gradient(90deg, var(--brand-500), var(--brand-700));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: var(--glass-shadow);
+      padding: clamp(20px, 5vw, 40px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(2, 132, 199, 0.15);
+    }
+
+    form {
+      display: grid;
+      gap: 24px;
+    }
+
+    .row {
+      display: grid;
+      gap: 14px;
+    }
+
+    @media (min-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .help {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      transition: var(--transition);
+    }
+
+    .field:focus-within {
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .field i {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .field input {
+      flex: 1;
+      font: inherit;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .field input::placeholder {
+      color: var(--muted-light);
+    }
+
+    .btn-inline {
+      border: 0;
+      background: var(--brand-600);
+      color: #fff;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-inline:hover {
+      background: var(--brand-700);
+      transform: translateY(-2px);
+    }
+
+    .btn-inline:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-inline i {
+      color: white !important;
+    }
+
+    .otp-wrap {
+      display: none;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .otp-wrap.show {
+      display: flex;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .status {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status.ok {
+      color: var(--success);
+    }
+
+    .status.err {
+      color: var(--danger);
+    }
+
+    .strength {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: 99px;
+      transition: width 0.5s ease, background 0.5s ease;
+    }
+
+    .checks {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .checks div {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .checks .ok {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .checks i {
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      border: 0;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--muted);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .tiny {
+      font-size: 12px;
+      color: var(--muted-light);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .password-toggle {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      transition: var(--transition);
+    }
+
+    .password-toggle:hover {
+      color: var(--brand-600);
+    }
+
+    .hint-box {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 8px;
+      border-left: 4px solid var(--brand-500);
+      display: none;
+    }
+
+    .hint-box.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .hint-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--brand-700);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hint-content {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      
+      .otp-wrap {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .actions {
+        flex-direction: column-reverse;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shell {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .checks {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">Hirewale · Worker Registration</div>
+      <div class="tag">Step 1 of 8 — Basic Information</div>
+    </header>
+
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+
+    <section class="card">
+      <form id="step1Form" autocomplete="off">
+        <!-- Full Name -->
+        <div class="row">
+          <label for="fullName">
+            <i class="fas fa-user"></i>
+            Full Name
+          </label>
+          <div class="field">
+            <i class="fas fa-user-circle"></i>
+            <input id="fullName" name="fullName" type="text" placeholder="e.g., Anil Kumar" required />
+          </div>
+        </div>
+
+        <!-- Mobile + OTP -->
+        <div class="row">
+          <label for="mobile">
+            <i class="fas fa-mobile-alt"></i>
+            Mobile Number <span class="help">(OTP verification required)</span>
+          </label>
+          <div class="field">
+            <i class="fas fa-flag"></i>
+            <span>+91</span>
+            <input id="mobile" name="mobile" type="tel" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" placeholder="9876543210" required />
+            <button type="button" id="sendOtpBtn" class="btn-inline">
+              <i class="fas fa-paper-plane"></i> Send OTP
+            </button>
+          </div>
+          
+          <div class="otp-wrap" id="otpWrap">
+            <div class="field" style="flex:1">
+              <i class="fas fa-key"></i>
+              <input id="otp" name="otp" type="text" inputmode="numeric" minlength="6" maxlength="6" placeholder="Enter 6-digit OTP" />
+            </div>
+            <button type="button" id="verifyOtpBtn" class="btn-inline">
+              <i class="fas fa-check-circle"></i> Verify
+            </button>
+            <div id="otpStatus" class="status" aria-live="polite"></div>
+          </div>
+          
+          <div class="hint-box" id="otpHint">
+            <div class="hint-title">
+              <i class="fas fa-info-circle"></i>
+              Development Note
+            </div>
+            <div class="hint-content" id="hintContent"></div>
+          </div>
+        </div>
+
+        <!-- Email (optional) -->
+        <div class="row">
+          <label for="email">
+            <i class="fas fa-envelope"></i>
+            Email <span class="help">(optional, for account recovery)</span>
+          </label>
+          <div class="field">
+            <i class="fas fa-at"></i>
+            <input id="email" name="email" type="email" inputmode="email" placeholder="you@example.com" />
+          </div>
+        </div>
+
+        <!-- Password + strength + confirm -->
+        <div class="grid-2">
+          <div class="row">
+            <label for="password">
+              <i class="fas fa-lock"></i>
+              Create Password
+            </label>
+            <div class="field">
+              <i class="fas fa-lock"></i>
+              <input id="password" name="password" type="password" placeholder="At least 8 characters" required />
+              <button type="button" class="password-toggle" id="passwordToggle">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="strength">
+              <div class="bar" aria-hidden="true">
+                <span id="pwBar"></span>
+              </div>
+              <div class="checks">
+                <div id="chkLen"><i class="fas fa-check-circle"></i> 8+ characters</div>
+                <div id="chkUp"><i class="fas fa-check-circle"></i> Uppercase letter</div>
+                <div id="chkNum"><i class="fas fa-check-circle"></i> Number</div>
+                <div id="chkSym"><i class="fas fa-check-circle"></i> Special character</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <label for="confirm">
+              <i class="fas fa-lock"></i>
+              Confirm Password
+            </label>
+            <div class="field">
+              <i class="fas fa-lock"></i>
+              <input id="confirm" name="confirm" type="password" placeholder="Re-type password" required />
+              <button type="button" class="password-toggle" id="confirmToggle">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div id="matchMsg" class="status" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-secondary" onclick="window.location.href=`worker-login.html`">
+            <i class="fas fa-arrow-left"></i> Back to Home
+          </button>
+          <button type="submit" id="nextBtn" class="btn btn-primary" disabled>
+            Next Step <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+        
+        <div class="tiny">
+          By continuing, you agree to our <a href="#" style="color: var(--brand-600);">Terms of Service</a> and <a href="#" style="color: var(--brand-600);">Privacy Policy</a>. 
+          Your data will be processed for registration purposes only.
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    // —— Helpers ——
+    const el = (id) => document.getElementById(id);
+
+    // Elements
+    const fullName = el('fullName');
+    const mobile = el('mobile');
+    const sendOtpBtn = el('sendOtpBtn');
+    const otpWrap = el('otpWrap');
+    const otp = el('otp');
+    const verifyOtpBtn = el('verifyOtpBtn');
+    const otpStatus = el('otpStatus');
+    const otpHint = el('otpHint');
+    const hintContent = el('hintContent');
+    const password = el('password');
+    const confirm = el('confirm');
+    const passwordToggle = el('passwordToggle');
+    const confirmToggle = el('confirmToggle');
+    const pwBar = el('pwBar');
+    const chkLen = el('chkLen');
+    const chkUp = el('chkUp');
+    const chkNum = el('chkNum');
+    const chkSym = el('chkSym');
+    const matchMsg = el('matchMsg');
+    const nextBtn = el('nextBtn');
+
+    let generatedOTP = '';
+    let otpVerified = false;
+    let resendTimer = 0;
+    let timerHandle = null;
+
+    // Password visibility toggles
+    passwordToggle.addEventListener('click', () => {
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    confirmToggle.addEventListener('click', () => {
+      const type = confirm.getAttribute('type') === 'password' ? 'text' : 'password';
+      confirm.setAttribute('type', type);
+      confirmToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    // Update checklist with better visual feedback
+    function updateChecklist(ok, el) {
+      if (ok) {
+        el.classList.add('ok');
+        el.innerHTML = el.innerHTML.replace('fa-check-circle', 'fa-check-circle').replace('fa-times-circle', 'fa-check-circle');
+      } else {
+        el.classList.remove('ok');
+        el.innerHTML = el.innerHTML.replace('fa-check-circle', 'fa-times-circle').replace('fa-times-circle', 'fa-times-circle');
+      }
+    }
+
+    // Enhanced password strength evaluation
+    function evaluatePassword(p) {
+      const hasLen = p.length >= 8;
+      const hasUp = /[A-Z]/.test(p);
+      const hasNum = /[0-9]/.test(p);
+      const hasSym = /[^A-Za-z0-9]/.test(p);
+      
+      // Calculate a more granular score (0-100)
+      let score = 0;
+      if (hasLen) score += 25;
+      if (hasUp) score += 25;
+      if (hasNum) score += 25;
+      if (hasSym) score += 25;
+      
+      // Additional points for longer passwords
+      if (p.length >= 12) score += 10;
+      if (p.length >= 16) score += 10;
+      
+      // Cap at 100
+      score = Math.min(score, 100);
+
+      updateChecklist(hasLen, chkLen);
+      updateChecklist(hasUp, chkUp);
+      updateChecklist(hasNum, chkNum);
+      updateChecklist(hasSym, chkSym);
+
+      // Visual feedback for password strength
+      pwBar.style.width = score + '%';
+      
+      if (score < 40) {
+        pwBar.style.background = 'var(--danger)';
+      } else if (score < 70) {
+        pwBar.style.background = 'var(--warning)';
+      } else {
+        pwBar.style.background = 'var(--success)';
+      }
+
+      return score >= 70; // Considered strong
+    }
+
+    // Update next button state based on form validity
+    function updateNextState() {
+      const nameOk = fullName.value.trim().length >= 2;
+      const pwOk = evaluatePassword(password.value);
+      const match = password.value && (password.value === confirm.value);
+      
+      matchMsg.textContent = match ? 'Passwords match' : (confirm.value ? 'Passwords do not match' : '');
+      matchMsg.className = 'status ' + (match ? 'ok' : 'err');
+      
+      if (match) {
+        matchMsg.innerHTML = '<i class="fas fa-check-circle"></i> Passwords match';
+      } else if (confirm.value) {
+        matchMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Passwords do not match';
+      } else {
+        matchMsg.innerHTML = '';
+      }
+
+      nextBtn.disabled = !(nameOk && otpVerified && pwOk && match);
+    }
+
+    // Add event listeners for form fields
+    password.addEventListener('input', updateNextState);
+    confirm.addEventListener('input', updateNextState);
+    fullName.addEventListener('input', updateNextState);
+
+    // Enhanced OTP flow with better UI
+    function startResendTimer(seconds) {
+      resendTimer = seconds;
+      sendOtpBtn.disabled = true;
+      sendOtpBtn.innerHTML = `<i class="fas fa-clock"></i> Resend in ${resendTimer}s`;
+      
+      timerHandle = setInterval(() => {
+        resendTimer--;
+        if (resendTimer <= 0) {
+          clearInterval(timerHandle);
+          sendOtpBtn.disabled = false;
+          sendOtpBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Resend OTP';
+        } else {
+          sendOtpBtn.innerHTML = `<i class="fas fa-clock"></i> Resend in ${resendTimer}s`;
+        }
+      }, 1000);
+    }
+
+    sendOtpBtn.addEventListener('click', () => {
+      const mv = mobile.value.trim();
+      const valid = /^[6-9][0-9]{9}$/.test(mv);
+      
+      if (!valid) {
+        otpStatus.textContent = 'Please enter a valid 10-digit Indian mobile number';
+        otpStatus.className = 'status err';
+        return;
+      }
+
+      // Generate mock OTP for demo
+      generatedOTP = ('' + Math.floor(100000 + Math.random() * 900000));
+      otpWrap.classList.add('show');
+      otp.value = '';
+      otpStatus.textContent = '';
+      otpHint.classList.add('show');
+      hintContent.textContent = `For testing purposes, the OTP is: ${generatedOTP}. In production, this would be sent via SMS.`;
+
+      // Show success message
+      otpStatus.textContent = 'OTP sent successfully!';
+      otpStatus.className = 'status ok';
+      
+      // Start the resend timer
+      startResendTimer(30);
+    });
+
+    verifyOtpBtn.addEventListener('click', () => {
+      if (otp.value.trim() === generatedOTP) {
+        otpVerified = true;
+        otpStatus.innerHTML = '<i class="fas fa-check-circle"></i> Mobile number verified';
+        otpStatus.className = 'status ok';
+        mobile.readOnly = true;
+        sendOtpBtn.disabled = true;
+        sendOtpBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+        otpWrap.classList.remove('show');
+        otpHint.classList.remove('show');
+      } else {
+        otpVerified = false;
+        otpStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid OTP. Please try again.';
+        otpStatus.className = 'status err';
+      }
+      updateNextState();
+    });
+
+    // Form submission
+    document.getElementById('step1Form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Create payload with form data
+      const payload = {
+        fullName: fullName.value.trim(),
+        mobile: mobile.value.trim(),
+        email: document.getElementById('email').value.trim() || null,
+        password: password.value
+      };
+      
+      // Store in sessionStorage (in a real app, you'd hash the password)
+      sessionStorage.setItem('hirewale_worker_step1', JSON.stringify(payload));
+      
+      // Show loading state on button
+      nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      nextBtn.disabled = true;
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        window.location.href = 'WRS-2.html';
+      }, 1500);
+    });
+
+    // Initialize UI state
+    updateNextState();
+  </script>
+</body>
+</html>
